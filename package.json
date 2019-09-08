@@ -36,6 +36,8 @@
     "eslint": "^5.16.0",
     "eslint-plugin-vue": "^5.0.0",
     "fibers": "^4.0.1",
+    "growl": "^1.10.5",
+    "https-proxy-agent": "^2.2.2",
     "sass": "^1.22.10",
     "sass-loader": "^7.3.1",
     "stylus": "^0.54.5",
