@@ -102,6 +102,12 @@
         </v-expansion-panel>
         </v-expansion-panels>
         <v-card>
+          <v-btn
+            class="info"
+            @click.native="swapTheme"
+          >
+            Swap Theme
+          </v-btn>
           <show-json :chartParams="chartParams" />
         </v-card>
       </v-col>
@@ -255,6 +261,14 @@ export default {
     },
     showParams () {
       alert(JSON.stringify(this.series, null, '\t'))
+    },
+    swapTheme () {
+      if (this.$vuetify.theme.dark === true) {
+        this.$vuetify.theme.dark = false
+      } else {
+        this.$vuetify.theme.dark = true
+      }
+      console.log('theme', this.$vuetify.theme)
     }
   }
 }
