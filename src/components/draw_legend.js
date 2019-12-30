@@ -23,6 +23,8 @@ export default (vm, svg, colorScale) => {
     itemPadding: 0,
     itemWidth: getItemWidth(font, item)
   }
+
+  DEPRECATED
   */
   // width related
   const legendParams = {

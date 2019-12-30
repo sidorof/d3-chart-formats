@@ -1,39 +1,15 @@
 # d3-chart-formats
 
-## Project setup
-```
-npm install
-```
+This project enables a way of exploring the selection of parameters for D3.js charts. D3 is an amazing package, you can do anything with it. However, that means  that decisions need to be made as to an overall look or aesthetic as well as more detail specifications for how a particular chart should look.
 
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
+To that end, I have created some classes and functions to make the charts and implemented a minor build using Vue.js and Vuetify.js to play with parameters.
 
-### Compiles and minifies for production
-```
-npm run build
-```
+This is in early stages.
 
-### Run your tests
-```
-npm run test
-```
+General strategy:
+    charts organized by category, such as
+        datelinePlot
+        dateBarPlot
+        piePlot
+        etc.
 
-### Lints and fixes files
-```
-npm run lint
-```
-
-### Run your end-to-end tests
-```
-npm run test:e2e
-```
-
-### Run your unit tests
-```
-npm run test:unit
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).

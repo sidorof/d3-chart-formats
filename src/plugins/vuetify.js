@@ -4,7 +4,7 @@ import 'vuetify/dist/vuetify.min.css'
 import colors from 'vuetify/lib/util/colors'
 
 Vue.use(Vuetify)
-console.log('colors', colors)
+
 export default new Vuetify({
   icons: {
     iconfont: 'mdi'

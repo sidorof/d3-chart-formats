@@ -19,7 +19,7 @@
           class="headline grey lighten-2"
           primary-title
         >
-          JSON Parameters sent to backend
+          {{ title }}
         </v-card-title>
 
         <v-card-text>
@@ -48,7 +48,8 @@ export default {
   props: ['chartParams'],
   data () {
     return {
-      dialog: false
+      dialog: false,
+      title: 'JSON Parameters sent to backend'
     }
   },
   computed: {

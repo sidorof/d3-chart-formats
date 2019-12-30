@@ -1,0 +1,23 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ShowJson.vue should have a custom title and match snapshot 1`] = `
+<div class="text-center" title="JSON Parameters sent to backend">
+  <v-dialog width="500">
+    <v-card>
+      <v-card-title primary-title="" class="headline grey lighten-2">
+        JSON Parameters sent to backend
+      </v-card-title>
+      <v-card-text>
+
+      </v-card-text>
+      <v-divider></v-divider>
+      <v-card-actions>
+        <div class="flex-grow-1"></div>
+        <v-btn color="primary" text="">
+          Done
+        </v-btn>
+      </v-card-actions>
+    </v-card>
+  </v-dialog>
+</div>
+`;

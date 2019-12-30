@@ -57,17 +57,13 @@ export default {
   props: ['ts', 'params', 'id'],
   data () {
     return {
+      chartParams: null,
       /*
       margins refer to space around v-container, done as fractions
       panels refer to space inside
       */
-      plot: {
-        size: { width: null, height: null },
-        background: '#000000'
-      },
-      plotSize: { width: null, height: null },
       panel: { top: 40, right: 40, bottom: 45, left: 60 },
-      margin: { top: 0.01, right: 0.02, bottom: 0.15, left: 0.0 },
+      margin: { top: 0.01, right: 0.02, bottom: 0.2, left: 0.0 },
       colors: ['blue', 'green', 'red', 'purple'],
       xlabel: null,
       ylabel: null,
@@ -78,19 +74,35 @@ export default {
     }
   },
   mounted: function () {
-    this.applyDefaults()
-    this.setSvgDims()
-    this.currentDisplay = this.displayType(
-      this.windowSizes()[0])
-    window.addEventListener('resize', this.handleWindowResize)
-    if (this.ts instanceof TS) {
-      this.drawChart()
+    this.chartParams = this.getConfig({ id: this.id })
+    if (this.chartParams !== null || this.chartParams !== undefined) {
+      this.applyDefaults()
+      this.setSvgDims()
+      this.currentDisplay = this.displayType(
+        this.windowSizes()[0])
+      window.addEventListener('resize', this.handleWindowResize)
+      if (this.ts instanceof TS) {
+        this.drawChart()
+      }
     }
   },
   watch: {
+    id: function (newData) {
+      if (newData !== null || newData !== undefined) {
+        this.chartParams = this.getConfig({ id: newData })
+        console.log('chartParams', this.chartParams)
+      }
+    },
+    chartParams: function (newData) {
+      console.log('DateLinePlot:watch:backgroundColor: newData', newData)
+      console.log('background', newData.plot.background)
+    },
+
     ts: function (newData) {
-      if (newData instanceof TS) {
-        this.drawChart()
+      if (this.chartParams !== null || this.chartParams !== undefined) {
+        if (newData instanceof TS) {
+          this.drawChart()
+        }
       }
     },
     svgWidth: function (newData) {
@@ -153,7 +165,7 @@ export default {
       this.svgHeight = dims[1] * (1 - this.margin.top - this.margin.bottom)
     },
     windowSizes () {
-      if (this.plotSize.width !== null) {}
+      // if (this.chartParams.plot.size.width !== null) {}
       var w = null
       var h = null
       if (window.innerWidth !== undefined && window.innerHeight !== undefined) {
@@ -274,7 +286,6 @@ export default {
       if (this.ts !== null) {
         // make variables available for chart use
         const ts = this.ts
-        console.log('ts', ts)
 
         const values = ts.withDateValues()
         const id = this.id
@@ -309,7 +320,8 @@ export default {
         var svg = chart.append('svg')
           .attr('width', this.svgWidth)
           .attr('height', this.svgHeight)
-          .style('background', '#000')
+          // .style('background', '#000')
+          .style('background', this.chartParams.plot.background)
 
         // calculate scales
         const yMin = ts.minValue()
