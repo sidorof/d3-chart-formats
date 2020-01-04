@@ -1,6 +1,6 @@
 import TSS from './TSS.class'
 /* Assumes useage:
- * Format is slightly different from Thymus.timeeries.as_json():
+ * Format is slightly different from Thymus.timeeries.to_json():
  * header is not used. Instead, assumed format is:
  *  payload.ticker
  *  payload.frequency
@@ -21,11 +21,13 @@ import TSS from './TSS.class'
  * import from json and converts as well.
  *
  * if exporting directly from ftseries.timeseries use:
- *  ts.to_json(dt_fmt=str, data_list=False))
+ *  ts.to_json(dt_fmt='str', data_list=False))
  *  That results in string dates are used as keys
  */
-export default class TS {
+export class TS {
   constructor (payload) {
+    this.columns = []
+    this.data = {}
     if (payload === undefined) {
       this.ticker = null
       this.frequency = null
@@ -33,8 +35,6 @@ export default class TS {
         endDate: null,
         startDate: null
       }
-      this.columns = []
-      this.data = {}
     } else {
       if (payload.header === undefined) {
         this.ticker = payload.ticker
@@ -58,8 +58,8 @@ export default class TS {
           this.columns = payload.header.columns
         }
       }
+      this.data = Object.assign({}, payload.data)
     }
-    this.data = Object.assign({}, payload.data)
 
     if (this.dateRange === undefined) {
       this.dateRange = {

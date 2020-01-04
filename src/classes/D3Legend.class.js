@@ -158,14 +158,6 @@ export default class Legend {
     return (rows + 1.5) * this.itemHeight
   }
 
-  _applyAttrs = function (obj, attrs) {
-    // NOTE: this is a duped funcion: find permanent home
-    for (var i = 0; i < attrs.length; i++) {
-      const attr = attrs[i]
-      obj.attr(attr[0], attr[1])
-    }
-  }
-
   doLegendItems = function (svg) {
     var row = 0
     var itemNo = 0

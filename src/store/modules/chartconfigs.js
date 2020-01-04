@@ -2,11 +2,11 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 
 // import chartThemes from '@/templates/templates'
-import { Theme } from '@/classes/D3Themes.class'
+// import { Theme } from '@/classes/D3Themes.class'
 
 Vue.use(Vuex)
 
-console.log('Theme', Theme)
+// console.log('Theme', Theme)
 // console.log('chartThemes', chartThemes)
 /* Sample Configuration
  * serves as a communicaton point between
@@ -58,7 +58,7 @@ console.log('Theme', Theme)
 */
 const state = {
   configs: {
-    dfltTheme: new Theme()
+    // dfltTheme: new Theme()
   },
 
   currentConfig: {},
