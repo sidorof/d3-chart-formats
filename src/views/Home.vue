@@ -1,13 +1,13 @@
 <template>
-  <Home />
+  <Isolate />
 </template>
 
 <script>
-import Home from '../components/Home'
+import Isolate from '../components/Isolate'
 
 export default {
   components: {
-    Home
+    Isolate
   }
 }
 </script>
