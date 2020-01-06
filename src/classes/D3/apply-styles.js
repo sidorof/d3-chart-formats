@@ -6,14 +6,21 @@
  */
 
 export const applyStyles = (obj, styles) => {
-  // uses a list due to observable problem
   if (styles !== undefined) {
-    for (var i = 0; i < styles.length; i++) {
-      const style = styles[i]
-      if (style.length !== 2) {
-        console.log('ERROR in applyStyles: style must be [attr, value]')
+    console.log('styles', styles)
+    Object.freeze(styles)
+    console.log(Object.getOwnPropertyNames(styles))
+    console.log('object keys', Object.keys(styles))
+    Object.getOwnPropertyNames(styles).forEach((key) => {
+      if (key !== '__ob__' && key !== 'length') {
+        console.log('item', key, styles[key])
+        obj.style(key, styles[key])
+        console.log('style updated')
       }
-      obj.style(style[0], style[1])
-    }
+    })
+    // }
+    // for (const key in styles) {
+    //  obj.style(key, styles[key])
+    // }
   }
 }

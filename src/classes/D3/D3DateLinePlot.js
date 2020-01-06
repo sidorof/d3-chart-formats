@@ -25,9 +25,8 @@ export class D3DateLinePlot extends D3LinePlot {
     this.createScales(height, width)
     this.addPanels(svg, height, width)
     this.addTitles(svg, height, width)
+    this.addAxes(svg, height, width)
     this.drawLines(svg)
-    // axes
-    // lines
     //    dot labels?
     // legend
     // mouseovers

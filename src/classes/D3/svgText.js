@@ -22,16 +22,8 @@ export const svgText = (svg, textLines) => {
       .attr('text-anchor', 'middle')
       .text(line.text)
 
-    var styles = { ...dfltStyles }
+    var styles = { ...dfltStyles, ...line.styles }
 
-    if (line.styles !== undefined) {
-      // add defaults if none present
-      line.styles.forEach(
-        (styleLine) => {
-          styles[styleLine[0]] = styleLine[1]
-        }
-      )
-    }
-    applyStyles(text, Object.entries(styles))
+    applyStyles(text, styles)
   })
 }

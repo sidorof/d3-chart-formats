@@ -1,64 +1,15 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 
-// import chartThemes from '@/templates/templates'
-// import { Theme } from '@/classes/D3Themes.class'
+import { defaultTheme } from '@/templates/default'
 
 Vue.use(Vuex)
 
 // console.log('Theme', Theme)
-// console.log('chartThemes', chartThemes)
-/* Sample Configuration
- * serves as a communicaton point between
- *  parent component and child components
- *
- * Parent at mount sets up the config
- *
-  configs: {
-    'uni-vami-unique-id': {
-     plot: {
-        size: { width: 500, height: 400 },
-        background: '#666666',
-        panel: { top: 40, right: 40, bottom: 45, left: 60 },
-        margin: { top: 0.01, right: 0.02, bottom: 0.15, left: 0.0 }
-      },
-      series: {
-        colorScheme: null,
-        lineWidth: 1.0,
-        markerSize: '5px',
-        opacity: 1.0
-      },
-      ...
-      plotControls: {
-        frequency: 1,
-        dateRange: { startDate: '2013-12-31', endDate: '2018-12-31' }
-      }
-
-    }
-  }
-
-  strategy:
-    set which config to work on, such as datelinePlot, dateBarPlot, piePlot, etc
-      those are the generic categories.
-
-    The original thought process was to create an object that hierarchically
-    held the components from themes to chart elemets. That process deteriorated
-    once more and more details were added to the
-
-    theme:
-      a set of colors, motifs or other elements that can make up a family
-      of characteristics
-
-      The concept is that any chart created with that theme will by default
-      have a certain look. However, any of those characteristics can be
-      overlayed by characteristics that are specific to the chart.
-
-      Therefore this looks a lot like an initial class that is extended into
-      a new class.
-*/
+console.log('defaultTheme', defaultTheme)
 const state = {
   configs: {
-    // dfltTheme: new Theme()
+    dfltConfig: defaultTheme
   },
 
   currentConfig: {},
@@ -119,6 +70,11 @@ const getters = {
       ids.push(config.chartId)
     }
     return ids
+  },
+  getDefaultConfig (state) {
+    console.log('store:getDefaultConfig')
+    console.log('defaultTheme', defaultTheme)
+    return defaultTheme
   },
   getConfigs (state) {
     return state.configs

@@ -44,9 +44,24 @@ export class D3Base {
       .style('margin', 'auto')
       .style('background', 'white')
 
+    console.log('========================>', this.styles)
     applyStyles(svg, this.styles)
+    console.log('finished base')
 
     return svg
+  }
+
+  modifyParams = (path, value) => {
+    /* modifyParams
+     *
+     * ex.  path = 'panel.styles'
+     *      value = ['fill', '#2cc']
+     *
+     * since panel.styles is an array:
+     *  looks through panel.styles
+     *
+     */
+
   }
 
   addRect = (payload) => {

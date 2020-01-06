@@ -36,7 +36,6 @@ const actions = {
     var curDate = new Date()
 
     var ts = new TS()
-    console.log('i am here')
     ts.key = key
     ts.frequency = 'd'
     for (var i = 0; i < numColumns; i++) {

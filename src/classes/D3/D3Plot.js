@@ -72,14 +72,18 @@ export class D3Plot extends D3Base {
   constructor ({ panel, titles, ...otherPayload }) {
     super(otherPayload)
 
-    this.panel = {
-      top: panel.top !== undefined ? panel.top : 30,
-      bottom: panel.bottom !== undefined ? panel.bottom : 0,
-      right: panel.right !== undefined ? panel.right : 0,
-      left: panel.left !== undefined ? panel.left : 0,
-      styles: panel.styles !== undefined ? panel.styles : [],
-      className: panel.className !== undefined ? panel.className : null
-    }
+    const dfltPanel = {
+      top: 30, bottom: 0, right: 0, left: 0, styles: {} }
+
+    this.panel = { ...dfltPanel, ...panel }
+
+    //   top: panel.top !== undefined ? panel.top : 30,
+    //   bottom: panel.bottom !== undefined ? panel.bottom : 0,
+    //   right: panel.right !== undefined ? panel.right : 0,
+    //   left: panel.left !== undefined ? panel.left : 0,
+    //   styles: panel.styles !== undefined ? panel.styles : {},
+    //   className: panel.className !== undefined ? panel.className : null
+    // }
 
     this.titles = titles !== undefined ? titles : []
   }
@@ -91,19 +95,23 @@ export class D3Plot extends D3Base {
 
   addPanels = (svg, height, width) => {
     const panel = this.panel
+    console.log('panel', panel)
     if (panel.top) {
+      console.log('panel.top')
       this.addRect({
         svg: svg,
         top: 0,
         left: 0,
         className: panel.className,
-        styles: panel.styles,
+        styles: this.panel.styles,
         width: width,
         height: panel.top
       })
+      console.log('finished panel.top')
     }
 
     if (panel.left) {
+      console.log('panel.left')
       this.addRect({
         svg: svg,
         top: panel.top,
@@ -116,6 +124,8 @@ export class D3Plot extends D3Base {
     }
 
     if (panel.right) {
+      console.log('panel.right')
+      console.log('panel.styles', panel.styles)
       this.addRect({
         svg: svg,
         top: panel.top,
@@ -129,6 +139,7 @@ export class D3Plot extends D3Base {
     }
 
     if (panel.bottom) {
+      console.log('panel.bottom')
       this.addRect({
         svg: svg,
         top: height - panel.bottom,
@@ -144,8 +155,8 @@ export class D3Plot extends D3Base {
   createTranslate (leftValues, topValues) {
     // for positioning using the svg translate function
     // doesn't implement rotations, skew, scale
-    const prefix = 'translate( '
-    return prefix + leftValues + ', ' + topValues + ' )'
+    const prefix = 'translate('
+    return prefix + leftValues + ', ' + topValues + ')'
   }
 
   // not being used right now

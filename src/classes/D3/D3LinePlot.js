@@ -27,7 +27,7 @@ export class D3LinePlot extends D3Plot {
     this.addTitles(svg, height, width)
   }
 
-  addAxes = (d3, svg, scaleX, scaleY, height, width) => {
+  addAxes = (svg, height, width) => {
     /* Was going to separate, but grids require both x/y
      * dimensions anyway, so might as well leave
      * combined.
@@ -38,6 +38,9 @@ export class D3LinePlot extends D3Plot {
      */
     const panel = this.panel
     const axes = this.axes
+    const d3 = this.d3
+    const scaleX = this.scaleX
+    const scaleY = this.scaleY
 
     var axisY = d3.axisLeft()
       .scale(scaleY)
