@@ -24,3 +24,6 @@ D3Base  -- prototype class
     ├── D3CombinationPlot
     ├── D3Network Plot
 ```
+The family of charts can then be extended by selecting the appropriate class and layer on the new feature.
+
+In an actual installation, the backend api will provide access to the available theme types.
