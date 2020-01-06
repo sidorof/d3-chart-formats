@@ -1,7 +1,6 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 
-// import chartThemes from '@/templates/templates'
 import { TS } from '@/classes/TS.class'
 
 Vue.use(Vuex)
