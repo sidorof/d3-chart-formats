@@ -8,7 +8,7 @@
 import { mapGetters, mapActions } from 'vuex'
 
 import { D3DateLinePlot } from '@/classes/D3/D3DateLinePlot'
-// import drawAxes from './draw_axes'
+// import drawAxes from '@/components/draw_axes'
 // import drawTitle from './draw_title'
 //
 // import DotLabel from '@/classes/D3DotLabel.class'
@@ -23,16 +23,16 @@ export default {
     return {
       id: 'test',
       chartParams: {
-        styles: [['background', '#9a9a9a']],
+        styles: [['background', '#eee']],
         className: 'chart',
         panel: {
           top: 60,
-          bottom: 60,
-          right: 40,
-          left: 40,
+          bottom: 70,
+          right: 60,
+          left: 60,
           className: 'panel',
           styles: [
-            ['fill', '#232323']
+            ['fill', '#ccc']
           ]
         },
         margin: { top: 0.0, right: 0.0, bottom: 0.0, left: 0.0 },
@@ -47,7 +47,7 @@ export default {
             ]
           },
           {
-            text: 'Whoa! subtitles',
+            text: 'Subtitle',
             x: '50%',
             y: 45,
             styles: [
@@ -55,7 +55,75 @@ export default {
               ['fill', '#888888']
             ]
           }
-        ]
+        ],
+        axes: {
+          xAxis: {
+            scaleFactor: 0.05,
+            label: {
+              className: 'axisLabel',
+              text: 'xlabel goes here',
+              fill: 'black',
+              offset: 0.5,
+              styles: [
+                ['font-size', 15],
+                ['font-weight', 300]
+              ]
+            },
+            ticks: 5,
+            styles: []
+          },
+          yAxis: {
+            label: {
+              className: 'axisLabel',
+              text: 'ylabel goes here',
+              fill: 'black',
+              // fontWeight: 400,
+              // fontSize: 10,
+              offset: 0.4,
+              styles: [
+                ['font-size', 15],
+                ['font-weight', 300]
+              ]
+            },
+            ticks: 5,
+            styles: [
+            ]
+          },
+          yRightAxis: {
+            label: {
+              className: 'axisLabel',
+              text: '',
+              fill: 'black',
+              offset: 0.25,
+              styles: []
+            },
+            ticks: 5,
+            styles: [
+            ]
+          },
+          grids: {
+            horizontal: {
+              className: 'horizontalGrid',
+              stroke: 'black',
+              strokeWidth: '1.0',
+              opacity: 0.1
+            },
+            vertical: {
+              className: 'verticalGrid',
+              stroke: 'black',
+              strokeWidth: '1.0',
+              opacity: 0.1
+            }
+          }
+        },
+        data: {
+          path: {
+            className: 'series',
+            // stroke: not implemented here
+            strokeWidth: 3.0
+            // dots go here
+          }
+        }
       },
       colors: ['blue', 'green', 'red', 'purple'],
       xlabel: null,
@@ -134,13 +202,10 @@ export default {
       var width = null
       var height = null
       if (window.innerWidth !== undefined && window.innerHeight !== undefined) {
-        console.log('using innerWidth and Height')
         // this requires 18 otherwise it overflows. Why?
         width = window.innerWidth - 18
-
         height = window.innerHeight * 0.7
       } else {
-        console.log('using clientWidth and Height')
         width = document.documentElement.clientWidth
         height = document.documentElement.clientHeight
       }
@@ -152,7 +217,6 @@ export default {
         this.currentDisplay = dispType
       }
       this.setSvgDims()
-      this.setPlotDims()
       this.drawChart()
     },
     displayType (width) {
@@ -210,28 +274,65 @@ export default {
       }
     },
     drawChart () {
-      // supporting functions
       console.log('starting drawChart')
 
+      // supporting functions
+      // get ClosestX
+      // get ClosestY
+      // is MouseInPlot
+
       var ts = this.getTs
-      console.log('ts', ts)
       var base = this.$d3.select(this.$el)
       const chartClassName = 'chart'
 
       base.selectAll('*').remove()
 
-      console.log(this.chartParams)
-      var plot = new D3DateLinePlot(this.chartParams)
-      plot.ts = ts
-
-      console.log('plot', plot)
-      // var sizes = this.windowSizes()
+      var plot = new D3DateLinePlot(
+        { d3: this.$d3, ts: this.getTs, ...this.chartParams })
 
       var svg = plot.createSvg(
         base, chartClassName, this.svgWidth, this.svgHeight)
-      // plot.addPanels(svg, this.svgHeight, this.svgWidth)
-      // plot.addTitles(svg)
       plot.buildChart(svg, this.svgHeight, this.svgWidth)
+
+      // preparation for axes
+      // --------------------------------------------
+      // calculate scales
+      const yMin = ts.minValue()
+      const yMax = ts.maxValue()
+
+      // scaling functions
+      var parseTime = this.$d3.timeParse('%Y-%m-%d')
+      const xMin = ts.startDate()
+      const xMax = ts.endDate()
+      var scaleX = this.$d3.scaleTime()
+        .domain([parseTime(xMin), parseTime(xMax)])
+        .range([0, this.svgWidth - this.chartParams.panel.left - this.chartParams.panel.right])
+
+      // axes labeling
+      var dateRange = xMin + '  --  ' + xMax
+      console.log('dateRange', dateRange)
+      plot.axes.xAxis.label.text = dateRange
+      var scaleY = this.$d3.scaleLinear()
+        .domain([yMin, yMax])
+        .range([this.svgHeight - this.chartParams.panel.top - this.chartParams.panel.bottom, 0])
+
+      var colorScale = this.$d3.scaleSequential(
+        this.$d3.interpolateRainbow)
+        .domain([0, ts.columns.length])
+
+      console.log('scaleX', scaleX)
+      console.log('scaleY', scaleY)
+      console.log('colorScale', colorScale)
+
+      // drawAxes(this, svg, scaleX, scaleY)
+      plot.addAxes(
+        this.$d3,
+        svg,
+        scaleX,
+        scaleY,
+        this.svgHeight,
+        this.svgWidth
+      )
     }
   }
 }

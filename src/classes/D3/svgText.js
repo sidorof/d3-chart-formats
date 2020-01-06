@@ -2,8 +2,10 @@
 /* This isn't really a class, will be moved later.
  * This function appends to svg and places text in
  * specific locations with style attributes.
+ *
+ * This is not meant for transforms (or rotations)
  */
-import { applyStyles } from './applyStyles'
+import { applyStyles } from './apply-styles'
 
 export const svgText = (svg, textLines) => {
   textLines.map((line) => {

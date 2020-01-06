@@ -1,5 +1,5 @@
-// applyStyles.js
-/* applyStyles
+// apply-styles.js
+/* apply-styles
  *
  * This function accepts an svg object such as rect
  * and add styles to it

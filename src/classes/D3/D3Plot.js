@@ -131,7 +131,7 @@ export class D3Plot extends D3Base {
     if (panel.bottom) {
       this.addRect({
         svg: svg,
-        top: height - panel.top - 1,
+        top: height - panel.bottom,
         left: 0,
         className: panel.className,
         styles: panel.styles,
@@ -139,6 +139,13 @@ export class D3Plot extends D3Base {
         height: panel.bottom
       })
     }
+  }
+
+  createTranslate (leftValues, topValues) {
+    // for positioning using the svg translate function
+    // doesn't implement rotations, skew, scale
+    const prefix = 'translate( '
+    return prefix + leftValues + ', ' + topValues + ' )'
   }
 
   // not being used right now

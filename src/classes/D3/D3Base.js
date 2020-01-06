@@ -13,10 +13,11 @@
  *
  */
 
-import { applyStyles } from './applyStyles'
+import { applyStyles } from './apply-styles'
 
 export class D3Base {
-  constructor ({ margin, className, styles }) {
+  constructor ({ d3, margin, className, styles }) {
+    this.d3 = d3
     // margin is used in the calculation of svg width and height
     this.margin = {
       top: margin.top !== undefined ? margin.top : 0.0,
