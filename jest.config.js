@@ -25,8 +25,8 @@ module.exports = {
   ],
   testURL: 'http://localhost/',
   watchPlugins: [
-   'jest-watch-typeahead/filename',
-   'jest-watch-typeahead/testname'
+    'jest-watch-typeahead/filename',
+    'jest-watch-typeahead/testname'
   ],
-  setupTestFrameworkScriptFile: "<rootDir>/tests/unit/setup.js"
+  setupTestFrameworkScriptFile: '<rootDir>/tests/unit/setup.js'
 }
