@@ -1,7 +1,7 @@
 
-import TS from './TS.class'
+import { TS } from './TS.class'
 
-export default class TSS {
+export class TSS {
   /* counterpart of TssDict */
   constructor (payload) {
     if (payload !== undefined) {

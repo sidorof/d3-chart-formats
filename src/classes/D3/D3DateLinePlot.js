@@ -22,8 +22,8 @@ export class D3DateLinePlot extends D3LinePlot {
   }
 
   buildChart = (svg, height, width) => {
-    this.createScales(height, width)
     this.addPanels(svg, height, width)
+    this.createScales(height, width)
     this.addTitles(svg, height, width)
     this.addAxes(svg, height, width)
     this.drawLines(svg)
@@ -101,7 +101,6 @@ export class D3DateLinePlot extends D3LinePlot {
   // lines
   drawLines = (svg) => {
     // TODO: reimplement this later
-
     const ts = this.ts
     const values = ts.withDateValues()
     const pathConfig = this.data.path

@@ -52,7 +52,8 @@ export class D3LinePlot extends D3Plot {
 
     var axisX = d3.axisBottom()
       .scale(scaleX)
-      .ticks(axes.xAxis.ticks)
+      // .ticks(axes.xAxis.ticks)
+      .ticks(d3.timeMonth.every(6))
 
     svg.append('g')
       .attr('class', 'x-axis axis')
@@ -93,7 +94,6 @@ export class D3LinePlot extends D3Plot {
       )
       .call(axisY)
 
-    // reinstate if can get more spacing
     svg.append('g')
       .attr('class', 'y-axis axis')
       .attr(
@@ -125,6 +125,9 @@ export class D3LinePlot extends D3Plot {
     grid.exit().remove()
 
     var label = axes.yAxis.label
+    const scaleBasis = {
+      value: height, ...this.panel1.heightRange
+    }
 
     if (label.text !== undefined || label.text !== '') {
       var text = svg.append('text')
@@ -140,7 +143,7 @@ export class D3LinePlot extends D3Plot {
         .attr('text-anchor', 'middle')
         .text(label.text)
 
-      applyStyles(text, label.styles)
+      applyStyles(text, label.styles, scaleBasis)
       text.exit().remove()
     }
 
@@ -160,7 +163,7 @@ export class D3LinePlot extends D3Plot {
         .attr('text-anchor', 'middle')
         .text(label.text)
 
-      applyStyles(text, label.styles)
+      applyStyles(text, label.styles, scaleBasis)
       text.exit().remove()
     }
 
@@ -175,7 +178,7 @@ export class D3LinePlot extends D3Plot {
         .attr('text-anchor', 'middle')
         .text(label.text)
 
-      applyStyles(text, label.styles)
+      applyStyles(text, label.styles, scaleBasis)
       text.exit().remove()
     }
   }

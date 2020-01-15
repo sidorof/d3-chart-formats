@@ -1,4 +1,4 @@
-import TSS from './TSS.class'
+import { TSS } from './TSS.class'
 /* Assumes useage:
  * Format is slightly different from Thymus.timeeries.to_json():
  * header is not used. Instead, assumed format is:

@@ -1,24 +1,13 @@
-
 <template>
-  <v-container>
-    <div
-      fluid
-      :id=id
-      class="ma-0 pa-0"
-      style="justify-content: center;"
-    >
-    <div class="chart"></div>
-    </div>
-    <v-btn>
-      <v-btn
-        text
-        color="primary"
-        @click="setDark()"
-      >
-        Dark
-      </v-btn>
-    </v-btn>
-  </v-container>
+  <v-card
+    :id=id
+    class="ma-0 pa-0"
+    style="justify-content: center;"
+    :height="startHeight"
+    :width="startWidth"
+    :params="params"
+  >
+  </v-card>
 </template>
 
 <script>
@@ -27,39 +16,47 @@ import { mapGetters, mapActions } from 'vuex'
 import { D3DateLinePlot } from '@/classes/D3/D3DateLinePlot'
 
 export default {
-  // props: [
-  //   'ts',
-  //   'params',
-  //   'id'],
+  props: [
+    'startHeight',
+    'startWidth'
+    //   'ts',
+    // 'params'
+    //   'id'
+  ],
   data () {
     return {
       id: 'test',
-      currentDisplay: null,
-      params: null
+      currentDisplay: null
     }
   },
   mounted: function () {
-    this.createTimeseries({ key: 'ts1', numColumns: 3, length: 200 })
     this.setSvgDims()
     this.currentDisplay = this.displayType(
       this.windowSizes()[0])
     window.addEventListener('resize', this.handleWindowResize)
-    if (this.params === null || this.params === undefined) {
-      console.log('attempting to load default config')
-      this.params = this.getDefaultConfig
-    }
   },
   watch: {
     id: function (newData) {
       if (newData !== null || newData !== undefined) {
         this.chartParams = this.getConfig({ id: newData })
-        console.log('chartParams', this.chartParams)
       }
     },
     params: function (newData) {
       if (newData !== null || newData !== undefined) {
-        console.log('params', newData)
         this.drawChart()
+      }
+    },
+    getTs: function (newData) {
+      if (newData !== null || newData !== undefined) {
+        this.drawChart()
+      }
+    },
+    getRefreshChart: function (newData) {
+      if (newData) {
+        this.setSvgDims()
+
+        this.drawChart()
+        this.setRefreshChart({ value: false })
       }
     }
   },
@@ -70,40 +67,24 @@ export default {
     ...mapGetters({
       getConfig: 'chart/getConfig',
       getDefaultConfig: 'chart/getDefaultConfig',
+      getCurrentConfig: 'chart/getCurrentConfig',
+      getRefreshChart: 'chart/getRefreshChart',
       getTs: 'sample/getTs'
-    })
+    }),
+    getDivSize () {
+      return [this.svgWidth, this.svgHeight]
+    },
+    params () {
+      return this.getCurrentConfig
+    }
   },
   methods: {
     ...mapActions({
       setConfig: 'chart/setConfig',
+      setRefreshChart: 'chart/setRefreshChart',
       createTimeseries: 'sample/createTimeseries',
       applyConfigPrices: 'prices/applyConfigPrices'
     }),
-    setDark () {
-      const changes = [
-        { path: 'panel.styles.fill', value: '#333' },
-        { path: 'axes.xAxis.stroke', value: 'white' },
-        { path: 'axes.yAxis.stroke', value: 'white' },
-        { path: 'axes.yRightAxis.stroke', value: 'white' },
-
-        { path: 'axes.xAxis.label.font-color', value: 'white' },
-        { path: 'axes.yAxis.label.font-color', value: 'white' },
-        { path: 'axes.yRightAxis.label.font-color', value: 'white' }
-      ]
-      changes.forEach(change => {
-        var curLocation = this.params
-        change.path.split('.').forEach((node) => {
-          curLocation = curLocation[node]
-        })
-
-        if (Array.isArray(curLocation)) {
-          curLocation.push(change.value)
-        } else {
-          curLocation = change.value
-        }
-        //         this.params = {}
-      })
-    },
     setParent () {
       if (this.parentId === undefined) {
         this.parent = {
@@ -122,14 +103,25 @@ export default {
     windowSizes () {
       var width = null
       var height = null
-      if (window.innerWidth !== undefined && window.innerHeight !== undefined) {
-        // this requires 18 otherwise it overflows. Why?
-        width = window.innerWidth - 18
-        height = window.innerHeight * 0.7
-      } else {
-        width = document.documentElement.clientWidth
-        height = document.documentElement.clientHeight
-      }
+      // if (window.innerWidth !== undefined && window.innerHeight !== undefined) {
+      //   // this requires 18 otherwise it overflows. Why?
+      //   width = window.innerWidth - 18
+      //   height = window.innerHeight * 0.7
+      // } else {
+      //   width = document.documentElement.clientWidth
+      //   height = document.documentElement.clientHeight
+      // }
+      width = (this.$el.clientWidth) * 0.97
+      height = width * 0.4
+      // height = Math.min(
+      //   width * 0.5, document.documentElement.clientHeight)
+
+      const rect = this.$el.getBoundingClientRect()
+      width = rect.width
+      height = rect.height
+      this.$nextTick(() => {
+        this.$vuetify.goTo(0)
+      })
       return [width, height]
     },
     handleWindowResize (event) {
@@ -172,7 +164,7 @@ export default {
     },
     drawChart () {
       var base = this.$d3.select(this.$el)
-      const chartClassName = 'chart'
+      const chartClassName = 'chart ma-0 pa-0'
 
       base.selectAll('*').remove()
 

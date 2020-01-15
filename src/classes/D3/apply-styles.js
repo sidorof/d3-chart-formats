@@ -4,23 +4,22 @@
  * This function accepts an svg object such as rect
  * and add styles to it
  */
+import { calcProportion } from '@/lib/D3/utils'
 
-export const applyStyles = (obj, styles) => {
+export const applyStyles = (obj, styles, scaleBasis) => {
   if (styles !== undefined) {
-    console.log('styles', styles)
-    Object.freeze(styles)
-    console.log(Object.getOwnPropertyNames(styles))
-    console.log('object keys', Object.keys(styles))
-    Object.getOwnPropertyNames(styles).forEach((key) => {
-      if (key !== '__ob__' && key !== 'length') {
-        console.log('item', key, styles[key])
-        obj.style(key, styles[key])
-        console.log('style updated')
+    styles = JSON.parse(JSON.stringify(styles))
+    for (const key in styles) {
+      var style = styles[key]
+      if (typeof style === 'object') {
+        // apply scaling
+        const value = calcProportion(
+          scaleBasis.value, scaleBasis, style.range
+        )
+        obj.style(key, value)
+      } else {
+        obj.style(key, style)
       }
-    })
-    // }
-    // for (const key in styles) {
-    //  obj.style(key, styles[key])
-    // }
+    }
   }
 }

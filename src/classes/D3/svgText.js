@@ -7,23 +7,14 @@
  */
 import { applyStyles } from './apply-styles'
 
-export const svgText = (svg, textLines) => {
-  textLines.map((line) => {
-    const dfltStyles = {
-      fill: 'black',
-      'font-size': '18'
-    }
+export const svgText = (svg, textObj, scaleBasis) => {
+  const text = svg.append('text')
+    .attr('class', textObj.className)
+    .attr('x', textObj.x)
+    .attr('y', textObj.y)
+    // .attr('dominant-basetextObj', 'middle')
+    .attr('text-anchor', 'middle')
+    .text(textObj.text)
 
-    const text = svg.append('text')
-      .attr('class', line.className)
-      .attr('x', line.x)
-      .attr('y', line.y)
-      // .attr('dominant-baseline', 'middle')
-      .attr('text-anchor', 'middle')
-      .text(line.text)
-
-    var styles = { ...dfltStyles, ...line.styles }
-
-    applyStyles(text, styles)
-  })
+  applyStyles(text, textObj.styles, scaleBasis)
 }

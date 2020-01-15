@@ -64,40 +64,66 @@
  *
  */
 // combine these
+import { calcProportion } from '@/lib/D3/utils'
 import { svgText } from './svgText'
 
 import { D3Base } from '@/classes/D3/D3Base'
 
 export class D3Plot extends D3Base {
-  constructor ({ panel, titles, ...otherPayload }) {
+  constructor ({ panel, panel1, titles, ...otherPayload }) {
     super(otherPayload)
 
     const dfltPanel = {
       top: 30, bottom: 0, right: 0, left: 0, styles: {} }
 
     this.panel = { ...dfltPanel, ...panel }
-
-    //   top: panel.top !== undefined ? panel.top : 30,
-    //   bottom: panel.bottom !== undefined ? panel.bottom : 0,
-    //   right: panel.right !== undefined ? panel.right : 0,
-    //   left: panel.left !== undefined ? panel.left : 0,
-    //   styles: panel.styles !== undefined ? panel.styles : {},
-    //   className: panel.className !== undefined ? panel.className : null
-    // }
-
+    this.panel1 = panel1 // change this name
     this.titles = titles !== undefined ? titles : []
   }
 
   buildChart = (svg, height, width) => {
+    height = Math.round(height)
+    width = Math.round(width)
     this.addPanels(svg, height, width)
-    this.addTitles(svg, height, width)
+    this.addTitles(svg, height, width, this.panel.heightRange)
+  }
+
+  panelCoords = (height, width) => {
+    const panel = {}
+    const panel1 = this.panel1
+
+    if (height > panel1.heightRange.max) {
+      panel.top = panel1.top.max
+      panel.bottom = panel1.bottom.max
+    } else if (height < panel1.heightRange.min) {
+      panel.top = panel1.top.min
+      panel.bottom = panel1.bottom.min
+    } else {
+      // (height - 200) / (300 - 200) * (70 - 20) + 20 = x
+      panel.top = calcProportion(
+        height,
+        panel1.heightRange,
+        { max: panel1.top.max, min: panel1.top.min }
+      )
+
+      panel.bottom = calcProportion(
+        height,
+        panel1.heightRange,
+        { max: panel1.bottom.max, min: panel1.bottom.min }
+      )
+    }
+
+    panel.left = this.panel.left
+    panel.right = this.panel.right
+    panel.styles = { ...panel1.styles }
+    panel.className = panel1.className
+    this.panel = panel
+    return panel
   }
 
   addPanels = (svg, height, width) => {
-    const panel = this.panel
-    console.log('panel', panel)
+    const panel = this.panelCoords(height, width)
     if (panel.top) {
-      console.log('panel.top')
       this.addRect({
         svg: svg,
         top: 0,
@@ -105,41 +131,41 @@ export class D3Plot extends D3Base {
         className: panel.className,
         styles: this.panel.styles,
         width: width,
-        height: panel.top
+        height: panel.top > 0
+          ? panel.top
+          : 1
       })
-      console.log('finished panel.top')
     }
 
     if (panel.left) {
-      console.log('panel.left')
       this.addRect({
         svg: svg,
-        top: panel.top,
+        top: panel.top - 1,
         left: 0,
         className: panel.className,
         styles: panel.styles,
         width: panel.left,
-        height: height - panel.top - panel.bottom
+        height: height - panel.top - panel.bottom > 0
+          ? height - panel.top - panel.bottom + 2 // why +2
+          : 1
       })
     }
 
     if (panel.right) {
-      console.log('panel.right')
-      console.log('panel.styles', panel.styles)
       this.addRect({
         svg: svg,
-        top: panel.top,
-        // some reason: need to offset more
-        left: width - panel.right, // * 1.5 + 4,
+        top: panel.top - 1,
+        left: width - panel.right,
         className: panel.className,
         styles: panel.styles,
         width: panel.right,
-        height: height - panel.top - panel.bottom
+        height: height - panel.top - panel.bottom > 0
+          ? height - panel.top - panel.bottom + 2
+          : 1
       })
     }
 
     if (panel.bottom) {
-      console.log('panel.bottom')
       this.addRect({
         svg: svg,
         top: height - panel.bottom,
@@ -147,16 +173,26 @@ export class D3Plot extends D3Base {
         className: panel.className,
         styles: panel.styles,
         width: width,
-        height: panel.bottom
+        height: panel.bottom > 0
+          ? panel.bottom
+          : 1
       })
     }
   }
 
-  createTranslate (leftValues, topValues) {
+  createTranslate (leftValue, topValue) {
     // for positioning using the svg translate function
     // doesn't implement rotations, skew, scale
+    if (leftValue < 0) {
+      console.log('createTranslate:faulty left values', leftValue)
+      leftValue = 0
+    }
+    if (topValue < 0) {
+      console.log('createTranslate:faulty top values', topValue)
+      topValue = 0
+    }
     const prefix = 'translate('
-    return prefix + leftValues + ', ' + topValues + ')'
+    return prefix + leftValue + ', ' + topValue + ')'
   }
 
   // not being used right now
@@ -169,7 +205,25 @@ export class D3Plot extends D3Base {
     )
   }
 
-  addTitles = (svg) => {
-    svgText(svg, this.titles)
+  addTitles = (svg, height, width) => {
+    /*
+     use panel range for scaling fonts
+     assumes that title go in top panel
+
+     uses top panel coords for y positioning
+    */
+    for (const lineNo in this.titles) {
+      // determine y position
+      var title = JSON.parse(JSON.stringify(this.titles[lineNo]))
+
+      if (title.y.endsWith('%')) {
+        title.y = this.panel.top * title.y.slice(0, -1) / 100
+      }
+      // this portion applies to scaling font-size up or down
+      const scaleBasis = {
+        value: height, ...this.panel1.heightRange
+      }
+      svgText(svg, title, scaleBasis)
+    }
   }
 }
