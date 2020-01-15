@@ -103,40 +103,49 @@ export class D3DateLinePlot extends D3LinePlot {
     // TODO: reimplement this later
     const ts = this.ts
     const values = ts.withDateValues()
-    const pathConfig = this.data.path
-
+    const pathConfig = JSON.parse(JSON.stringify(this.data.path))
+    const dots = this.data.path.dots
+    console.log('pathConfig', pathConfig)
     for (var lineNo = 0; lineNo < ts.columns.length; lineNo++) {
       var lineFunc = this.d3.line()
         .x((d) => this.scaleX(this.parseTime(d.date)))
         .y((d) => this.scaleY(d.values[lineNo]))
 
-      svg.append('path')
-        .attr('class', pathConfig.className)
-        .attr(
-          'transform',
-          this.createTranslate(
-            this.panel.left,
-            this.panel.top)
-        )
-        .attr('d', lineFunc(values, lineNo))
-        .attr('stroke', this.colorScale(lineNo))
-        .attr('stroke-width', pathConfig.strokeWidth)
-        .attr('fill', 'none')
-
-      // if (this.getUseDots) {
-      //   svg.selectAll('dot')
-      //     .data(values)
-      //     .enter().append('circle')
-      //     .attr('fill', colorScale(lineNo))
-      //     .attr('r', 2.4)
-      //     .attr('cx', (d) => scaleX(parseTime(d.date)))
-      //     .attr('cy', (d) => scaleY(d.values[lineNo]))
-      //     .attr(
-      //       'transform',
-      //       this.createTranslate(
-      //         this.leftOffset,
-      //         this.topOffset))
-      // }
+      if (pathConfig.useLines) {
+        svg.append('path')
+          .attr('class', pathConfig.className)
+          .attr(
+            'transform',
+            this.createTranslate(
+              this.panel.left,
+              this.panel.top)
+          )
+          .attr('d', lineFunc(values, lineNo))
+          .attr('stroke', this.colorScale(lineNo))
+          .attr('stroke-width', pathConfig.strokeWidth)
+          .attr('fill', 'none')
+      }
+      if (dots.useDots) {
+        svg.selectAll('dot')
+          .data(values)
+          .enter().append('circle')
+          .attr('r', dots.radius)
+          .attr('cx', (d) => this.scaleX(this.parseTime(d.date)))
+          .attr('cy', (d) => this.scaleY(d.values[lineNo]))
+          .attr('fill', dots.useFill
+            ? this.colorScale(lineNo)
+            : 'none'
+          )
+          .attr('stroke', dots.useFill
+            ? this.colorScale(lineNo)
+            : 'none'
+          )
+          .attr(
+            'transform',
+            this.createTranslate(
+              this.panel.left,
+              this.panel.top))
+      }
     }
   }
 

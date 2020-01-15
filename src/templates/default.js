@@ -116,9 +116,15 @@ export const defaultTheme = {
   data: {
     path: {
       className: 'series',
-      // stroke: not implemented here
-      strokeWidth: 2.0
-      // dots go here
+      useLines: true,
+      strokeWidth: 2.0,
+      dots: {
+        // colors derive from color scale
+        useDots: false,
+        useStroke: false,
+        useFill: true,
+        radius: 8
+      }
     }
   },
   scale: [

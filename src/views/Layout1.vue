@@ -111,7 +111,7 @@ export default {
     svgWidthMin: '40',
     svgWidthMax: '1200',
 
-    svgHeight: '250',
+    svgHeight: '600',
     svgHeightMin: '40',
     svgHeightMax: '1000',
 
