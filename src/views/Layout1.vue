@@ -90,24 +90,6 @@ export default {
     window.removeEventListener('resize', this.handleWindowResize)
   },
   watch: {
-    // scaling: function (newData, oldData) {
-    //   console.log('watch:scaling triggered')
-    //   console.log('newData, oldData', newData, oldData)
-    //   console.log(typeof newData)
-    //   console.log('newData.length', newData.length, typeof newData[0])
-    //   console.log('Object.getOwnPropertyNames(a)', Object.getOwnPropertyNames(newData))
-    //
-    //   if (newData.toString() !== oldData.toString()) {
-    //     var config
-    //     // this is to be used if difficulty backtracking
-    //     //   if (this.modId !== null) {
-    //     //     const mods = this.getMod({ id: this.modId })
-    //     config = this.combineMods(this.getCurrentConfig, newData.slice())
-    //     this.setConfig({ id: 'currentConfig', ...config })
-    //     this.setRefreshChart({ value: true })
-    //     console.log('i am here')
-    //   }
-    // },
     svgWidth: function (newData) {
       // this.getScaleBreaks()
     },
@@ -149,7 +131,6 @@ export default {
        * config: either current or default
        * modId: typically selected from the list
        */
-      console.log('applyMods: modId', modId)
       config = JSON.parse(JSON.stringify({ ...config }))
       if (modId !== undefined && modId !== null) {
         if (modId === 'default') {
@@ -159,14 +140,12 @@ export default {
               ...this.getDefaultConfig
             }
           )
-          console.log('set with default config')
           this.refreshChart()
         } else {
           this.modId = modId
           const mods = this.getMod({ id: modId })
 
           config = this.combineMods(config, mods)
-          console.log('config', config)
           this.setConfig({ id: 'currentConfig', ...config })
         }
         this.refreshChart()
@@ -185,8 +164,6 @@ export default {
             part = part[branch[i]]
             part[leaf] = mod.value
           }
-        } else {
-          console.log('mod skipped', mod)
         }
       })
       return params
@@ -197,20 +174,14 @@ export default {
       const modScales = this.getCurrentConfig.scale
 
       if (modScales !== undefined) {
-        console.log('modScales', modScales)
         modScales.map((scale) => {
           if (scale.width !== undefined && scale.width >= this.svgWidth) {
             scaling.push(scale.paths)
-            console.log('adding to scaling')
           }
           if (scale.height !== undefined && scale.height >= this.svgHeight) {
             scaling.push(scale.paths)
-            console.log('adding to scaling')
           }
         })
-      }
-      if (scaling.length > 0) {
-        console.log('scaling is', scaling)
       }
       this.scaling = scaling
       return scaling
@@ -233,18 +204,15 @@ export default {
         { path: 'axes.yRightAxis.label.fill', value: 'white' }
       ]
       changes.forEach(change => {
-        console.log('posting change', change)
         const branch = change.path.split('.').slice(0, -1)
         const leaf = change.path.split('.').slice(-1)
         var part = this.params
         for (var i = 0; i < branch.length; i++) {
-          console.log('branch[i]', branch[i])
           part = part[branch[i]]
         }
-        console.log('part', part)
         part[leaf] = change.value
       })
-      console.log('params', this.params)
+
       this.setConfig({ id: 'currentConfig', ...this.params })
       this.$nextTick(() => {
         this.$vuetify.goTo(0)

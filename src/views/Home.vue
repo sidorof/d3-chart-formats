@@ -125,7 +125,6 @@ export default {
     newData (numColumns, length) {
       // prep for various plot types switch
       this.recalcTs(this.numColumns, this.length)
-      console.log('theoretically recalced')
     }
   }
 }
