@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 
-import defaultTheme from '@/templates/default'
+import defaultTheme from '@/classes/D3/templates/default'
 
 console.log('defaultTheme', defaultTheme)
 
