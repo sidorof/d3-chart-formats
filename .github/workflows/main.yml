@@ -8,10 +8,20 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v1
-    - name: Run a one-line script
-      run: npm run build
-    - name: Run a multi-line script
-      run: |
-        git push -f git@github.com:sidorof/d3-chart-formats.git master:gh-pages,
-        echo "complete?".
+      - uses: actions/checkout@master
+      - name: npm install
+        uses: actions/npm@master
+        with:
+          args: install
+      - name: npm lint
+        uses: actions/npm@master
+        with:
+         args: run lint
+      - name: Build 
+        run: |
+          npm install
+          npm run-script build
+      - name: Push
+        run: |
+          git push -f git@github.com:sidorof/d3-chart-formats.git master:gh-pages,
+          echo "complete?".
