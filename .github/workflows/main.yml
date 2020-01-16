@@ -1,0 +1,29 @@
+name: CI
+
+on: [push]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v1
+      - uses: actions/setup-node@v1
+        with:
+          node-version: '10.x'
+      - run: npm install
+      - run: npm test
+      
+      - name: npm lint
+        uses: actions/npm@master
+        with:
+         args: run lint
+      - name: Build 
+        run: |
+          npm install
+          npm run-script build
+      - name: Push
+        run: |
+          git push -f git@github.com:sidorof/d3-chart-formats.git master:gh-pages,
+          echo "complete?".
