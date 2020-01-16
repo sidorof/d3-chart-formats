@@ -10,11 +10,10 @@ jobs:
     steps:
       - uses: actions/checkout@master
       - name: npm install
-        uses: actions/npm@master
+        run: npm install
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          args: install
+      
       - name: npm lint
         uses: actions/npm@master
         with:
