@@ -105,7 +105,6 @@ export class D3DateLinePlot extends D3LinePlot {
     const values = ts.withDateValues()
     const pathConfig = JSON.parse(JSON.stringify(this.data.path))
     const dots = this.data.path.dots
-    console.log('pathConfig', pathConfig)
     for (var lineNo = 0; lineNo < ts.columns.length; lineNo++) {
       var lineFunc = this.d3.line()
         .x((d) => this.scaleX(this.parseTime(d.date)))
