@@ -35,7 +35,7 @@ class DefaultTheme {
 
     this.margin = { top: 0.0, right: 0.0, bottom: 0.0, left: 0.0 }
 
-    this.title = {
+    this.titles = {
       1: {
         text: 'Main Chart Title',
         x: '50%',
