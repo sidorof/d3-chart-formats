@@ -28,42 +28,6 @@
           @click="refreshChart()"
         >
         </v-slider>
-
-        <v-divider/>
-
-        <v-list>
-          <v-list-item-group>
-            <v-list-item
-              v-for="(modId, i) in getModIds"
-              :key="i"
-            >
-              <v-list-item-content>
-                <v-list-item-title
-                  v-text="modId"
-                  @click="applyMods(getDefaultConfig, modId)"
-                  ></v-list-item-title>
-              </v-list-item-content>
-            </v-list-item>
-          </v-list-item-group>
-        </v-list>
-        {{ scaling }}
-        <v-card
-            class="mx-auto"
-            tile
-        >
-          here I am
-          <v-list-item
-            v-for="(mod, i) in scaling"
-            :key="i"
-            two-line
-          >
-            <v-list-item-content>
-              <v-list-item-title>{{ mod.path }}</v-list-item-title>
-              <v-list-item-subtitle>{{ mod.value }}</v-list-item-subtitle>
-            </v-list-item-content>
-          </v-list-item>
-        </v-card>
-
       </v-card>
     </v-col>
     <v-col cols="9">
