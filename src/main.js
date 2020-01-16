@@ -6,7 +6,7 @@ import router from './router'
 import store from './store'
 import './registerServiceWorker'
 import vuetify from './plugins/vuetify'
-import '@babel/polyfill'
+// import '@babel/polyfill'
 
 Vue.config.productionTip = false
 
