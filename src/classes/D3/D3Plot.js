@@ -184,11 +184,11 @@ export class D3Plot extends D3Base {
     // for positioning using the svg translate function
     // doesn't implement rotations, skew, scale
     if (leftValue < 0) {
-      console.log('createTranslate:faulty left values', leftValue)
+      // console.log('createTranslate:faulty left values', leftValue)
       leftValue = 0
     }
     if (topValue < 0) {
-      console.log('createTranslate:faulty top values', topValue)
+      // console.log('createTranslate:faulty top values', topValue)
       topValue = 0
     }
     const prefix = 'translate('

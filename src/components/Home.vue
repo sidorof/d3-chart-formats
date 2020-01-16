@@ -282,10 +282,6 @@ export default {
         this.getConfig({ id: this.chartId })
       }
     },
-    chartParams: function (newData) {
-      console.log('watch:backgroundColor: newData', newData)
-      console.log('background', newData.plot.background)
-    },
     getColor: function (newData) {
       if (!newData.dialog) {
         switch (newData.type) {

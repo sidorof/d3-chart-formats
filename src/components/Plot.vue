@@ -76,26 +76,16 @@ export default {
     }
   },
   mounted () {
-    console.log('Plot mounted: started')
     this.chartParams = this.getConfig({ id: this.chartId })
     this.backgroundColor = this.chartParams.plot.background
-    console.log('Plot mounted: finished')
   },
   watch: {
-    chartParams: function (newData) {
-      console.log('watch:backgroundColor: newData', newData)
-      console.log('background', newData.plot.background)
-    },
     colorModal: function (newData) {
       if (newData) {
-        console.log('must be true')
         this.backgroundColor = this.chartParams.plot.background
       } else {
-        console.log('must be false')
         this.chartParams.plot.background = this.backgroundColor
       }
-      console.log('colorModal', newData)
-      console.log('background', this.chartParams.plot.background)
     }
     // getColor: function (newData) {
     //   if (newData !== null || newData !== undefined) {
@@ -126,7 +116,6 @@ export default {
       setColor: 'chart/setColor'
     }),
     close () {
-      console.log('close: is called', Object.entries(this.chartParams))
       this.chartParams.plot.background = this.background
       this.setConfig(this.chartParams)
       this.colorModal = false

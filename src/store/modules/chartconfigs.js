@@ -3,11 +3,8 @@ import Vuex from 'vuex'
 
 import defaultTheme from '@/classes/D3/templates/default'
 
-console.log('defaultTheme', defaultTheme)
-
 Vue.use(Vuex)
 
-// console.log('Theme', Theme)
 const state = {
   configs: {
     dfltConfig: { ...defaultTheme },
@@ -77,7 +74,6 @@ const state = {
 const mutations = {
   setConfig (state, payload) {
     // put it to a specific id
-    console.log('mutations:setConfig: payload', payload)
     Vue.set(state.configs, payload.id, payload)
   },
 
@@ -95,28 +91,21 @@ const mutations = {
     const params = JSON.parse(
       JSON.stringify(state.configs.currentConfig))
     var modScales = []
-    console.log('mutations:scaleMode: params', params)
     const scaling = params.scale
 
     // filter and flatten
     if (scaling !== undefined) {
       scaling.map((scale) => {
-        console.log('scale', scale)
         if (scale.width !== undefined && scale.width >= width) {
           modScales = modScales.concat(scale.paths)
-          console.log('width scale.paths added', scale.paths)
         }
         if (scale.height !== undefined && scale.height >= height) {
           modScales = modScales.concat(scale.paths)
-          console.log('height scale.paths added', scale.paths)
         }
       })
     }
-    console.log('accumulated mods', modScales)
     if (JSON.parse(JSON.stringify(modScales)).length > 0) {
       modScales.forEach((mod) => {
-        console.log('mod', mod)
-        console.log('mod.path', mod.path)
         const branch = mod.path.split('.').slice(0, -1)
         const leaf = mod.path.split('.').slice(-1)
         var part = params
@@ -155,7 +144,6 @@ const mutations = {
 const actions = {
   setConfig ({ commit }, payload) {
     commit('setConfig', payload)
-    console.log('setConfig: payload', payload)
   },
   setColor ({ commit }, payload) {
     commit('setColor', payload)
@@ -164,7 +152,6 @@ const actions = {
     commit('applyConfig')
   },
   scaleMod ({ commit }, payload) {
-    console.log('actions:scaleMod: payload', payload)
     commit('scaleMod', payload)
   },
   setRefreshChart ({ commit }, payload) {
@@ -181,7 +168,6 @@ const actions = {
 
 const getters = {
   getConfig: (state) => (payload) => {
-    console.log('getters:getConfig', payload)
     return state.configs[payload.id]
   },
   getConfigIds: (state) => (payload) => {

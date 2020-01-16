@@ -87,7 +87,6 @@ export default (vm, svg, colorScale) => {
 
   // entire width of legend
   const legWidth = (vm.getColumnLengths + legPadding) * charWidth
-  console.log('ts.columns', vm.ts.columns)
 
   // start of legend
   const legLeft = vm.leftOffset
