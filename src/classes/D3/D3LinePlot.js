@@ -52,8 +52,8 @@ export class D3LinePlot extends D3Plot {
 
     var axisX = d3.axisBottom()
       .scale(scaleX)
-      // .ticks(axes.xAxis.ticks)
-      .ticks(d3.timeMonth.every(6))
+      .ticks(axes.xAxis.ticks)
+      // .ticks(d3.timeMonth.every(1))
 
     svg.append('g')
       .attr('class', 'x-axis axis')
