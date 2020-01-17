@@ -8,6 +8,9 @@ To that end, I have created some classes and functions to make the charts and im
 
 This is a work in progress.
 
+The current version can be seen at https://sidorof.github.io/d3-chart-formats/
+
+
 General strategy:
 
 Exploring resizing first: As the chart is resized up or down, a simple mechanism slots in style changes to adjust proportions, font sizes and other characteristics to keep the chart useful at a wide range of resolutions.
