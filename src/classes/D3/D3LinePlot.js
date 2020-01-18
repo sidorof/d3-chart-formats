@@ -13,6 +13,8 @@
  */
 
 import { applyStyles } from './apply-styles'
+import { calcProportion } from '@/lib/D3/utils'
+
 import { D3Plot } from '@/classes/D3/D3Plot'
 
 export class D3LinePlot extends D3Plot {
@@ -50,9 +52,28 @@ export class D3LinePlot extends D3Plot {
       .scale(scaleY)
       .ticks(axes.yRightAxis.ticks)
 
+    console.log(
+      'this.panel1.widthRange',
+      JSON.parse(JSON.stringify(this.panel1.widthRange)))
+    // const tickRange =
+    console.log(
+      'ticks',
+      Math.round(
+        calcProportion(
+          width,
+          JSON.parse(JSON.stringify(this.panel1.widthRange)),
+          { max: axes.xAxis.ticks.range.max, min: axes.xAxis.ticks.range.min }
+        )))
+
     var axisX = d3.axisBottom()
       .scale(scaleX)
       .ticks(axes.xAxis.ticks)
+      .ticks(Math.round(
+        calcProportion(
+          width,
+          this.panel1.widthRange,
+          axes.xAxis.ticks.range
+        ).toString()))
       // .ticks(d3.timeMonth.every(1))
 
     svg.append('g')

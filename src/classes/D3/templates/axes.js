@@ -5,7 +5,7 @@ const axes = {
       className: 'axisLabel',
       text: 'xlabel',
 
-      offset: 0.5,
+      offset: 0.65,
       styles: {
         'font-size': {
           range: { max: 15, min: 7 }
@@ -14,7 +14,9 @@ const axes = {
         fill: 'black'
       }
     },
-    ticks: 6,
+    ticks: {
+      range: { max: 10, min: 3 }
+    },
     styles: {}
   },
   yAxis: {

@@ -12,7 +12,7 @@ class DefaultTheme {
 
     this.panel1 = {
       heightRange: { max: 300, min: 200 },
-      widthRange: { max: 250, min: 200 },
+      widthRange: { max: 550, min: 330 },
       top: { max: 70, min: 20, scale: 'byHeight' }, // scale not functional
       bottom: { max: 70, min: 20, scale: 'byHeight' },
       right: { max: 60, min: 20, scale: 'byWidth' },
