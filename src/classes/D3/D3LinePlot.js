@@ -52,19 +52,6 @@ export class D3LinePlot extends D3Plot {
       .scale(scaleY)
       .ticks(axes.yRightAxis.ticks)
 
-    console.log(
-      'this.panel1.widthRange',
-      JSON.parse(JSON.stringify(this.panel1.widthRange)))
-    // const tickRange =
-    console.log(
-      'ticks',
-      Math.round(
-        calcProportion(
-          width,
-          JSON.parse(JSON.stringify(this.panel1.widthRange)),
-          { max: axes.xAxis.ticks.range.max, min: axes.xAxis.ticks.range.min }
-        )))
-
     var axisX = d3.axisBottom()
       .scale(scaleX)
       .ticks(axes.xAxis.ticks)
