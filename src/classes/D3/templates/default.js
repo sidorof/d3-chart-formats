@@ -23,10 +23,16 @@ class DefaultTheme {
       }
     }
     this.panel = {
-      top: 60,
-      bottom: 70,
-      right: 60,
-      left: 60,
+      coords: {
+        top: 60,
+        bottom: 70,
+        right: 60,
+        left: 60
+      },
+      topPanel: { styles: {} },
+      leftPanel: { styles: {} },
+      rightPanel: { styles: {} },
+      bottomPanel: { styles: {} },
       className: 'panel',
       styles: {
         fill: '#ccc'
@@ -36,10 +42,10 @@ class DefaultTheme {
     this.margin = { top: 0.0, right: 0.0, bottom: 0.0, left: 0.0 }
 
     this.titles = {
-      1: {
+      '1': {
         text: 'Main Chart Title',
         x: '50%',
-        y: '40%',
+        y: '42%',
         styles: {
           'font-size': {
             range: { max: 24, min: 10 }
@@ -47,7 +53,7 @@ class DefaultTheme {
           'fill': '#222'
         }
       },
-      2: {
+      '2': {
         text: 'Subtitle',
         x: '50%',
         y: '75%',

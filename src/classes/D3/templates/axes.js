@@ -1,17 +1,22 @@
 const axes = {
+  styles: {
+    stroke: '#000',
+    strokeWidth: 0.5,
+    fontWeight: 100,
+    opacity: 0.4
+  },
   xAxis: {
     scaleFactor: 0.05,
     label: {
       className: 'axisLabel',
       text: 'xlabel',
-
+      fill: 'black',
       offset: 0.65,
       styles: {
         'font-size': {
           range: { max: 15, min: 7 }
         },
-        'font-weight': 300,
-        fill: 'black'
+        'font-weight': 300
       }
     },
     ticks: {
@@ -30,7 +35,7 @@ const axes = {
         'font-weight': 300
       }
     },
-    ticks: 5,
+    ticks: '5',
     styles: {}
   },
   yRightAxis: {
