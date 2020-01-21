@@ -55,14 +55,14 @@ export class D3DateLinePlot extends D3LinePlot {
     this.scaleX = d3.scaleTime()
       .domain(
         [this.parseTime(xRange.min), this.parseTime(xRange.max)])
-      .range([0, width - panel.left - panel.right])
+      .range([0, width - panel.coords.left - panel.coords.right])
 
     const dateRange = xRange.min + '  --  ' + xRange.max
     this.axes.xAxis.label.text = dateRange
 
     this.scaleY = d3.scaleLinear()
       .domain([yRange.min, yRange.max])
-      .range([height - this.panel.top - panel.bottom, 0])
+      .range([height - this.panel.coords.top - panel.coords.bottom, 0])
 
     this.colorScale = d3.scaleSequential(
       d3.interpolateRainbow)
@@ -116,8 +116,8 @@ export class D3DateLinePlot extends D3LinePlot {
           .attr(
             'transform',
             this.createTranslate(
-              this.panel.left,
-              this.panel.top)
+              this.panel.coords.left,
+              this.panel.coords.top)
           )
           .attr('d', lineFunc(values, lineNo))
           .attr('stroke', this.colorScale(lineNo))
@@ -142,8 +142,8 @@ export class D3DateLinePlot extends D3LinePlot {
           .attr(
             'transform',
             this.createTranslate(
-              this.panel.left,
-              this.panel.top))
+              this.panel.coords.left,
+              this.panel.coords.top))
       }
     }
   }

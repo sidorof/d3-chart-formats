@@ -29,6 +29,27 @@
         >
         </v-slider>
       </v-card>
+
+    <v-card
+        class="mx-auto"
+        max-width="400"
+        tile
+    >
+        Themes
+        <v-list-item
+            v-for="(modId1, i) in getModIds"
+            :key=i
+            @click="applyMods(getDefaultConfig, modId1)"
+        >
+        <v-list-item-content>
+            <v-list-item-title
+            >{{ modId1 }}
+            </v-list-item-title>
+
+        </v-list-item-content>
+        </v-list-item>
+    </v-card>
+
     </v-col>
     <v-col cols="9">
     <div>
@@ -121,9 +142,11 @@ export default {
     }),
 
     refreshChart () {
-      this.applyMods(this.getDefaultConfig, this.modId)
-      this.scaleMod({ width: this.svgWidth, height: this.svgHeight })
+      // this.applyMods(this.getDefaultConfig, this.modId)
       this.setRefreshChart({ value: true })
+      // this.$nextTick(() => {
+      //   this.$vuetify.goTo(0)
+      // })
     },
 
     applyMods (config, modId) {
@@ -143,17 +166,16 @@ export default {
           this.refreshChart()
         } else {
           this.modId = modId
-          const mods = this.getMod({ id: modId })
-
-          config = this.combineMods(config, mods)
+          const modObj = this.getMod({ id: modId })
+          config = this.combineMods(config, modObj.mods, modObj.colors)
           this.setConfig({ id: 'currentConfig', ...config })
         }
-        this.refreshChart()
       }
     },
 
-    combineMods (config, mods) {
-      var params = { ...config }
+    combineMods (config, mods, colors) {
+      var params = JSON.parse(JSON.stringify(config))
+      colors = JSON.parse(JSON.stringify(colors))
 
       mods.forEach((mod) => {
         if (mod.path !== undefined) {
@@ -162,29 +184,13 @@ export default {
           var part = params
           for (var i = 0; i < branch.length; i++) {
             part = part[branch[i]]
-            part[leaf] = mod.value
           }
+          part[leaf] = mod.value.toString().startsWith('{')
+            ? colors[mod.value.slice(1, -1)]
+            : mod.value
         }
       })
       return params
-    },
-
-    getScaleBreaks () {
-      var scaling = []
-      const modScales = this.getCurrentConfig.scale
-
-      if (modScales !== undefined) {
-        modScales.map((scale) => {
-          if (scale.width !== undefined && scale.width >= this.svgWidth) {
-            scaling.push(scale.paths)
-          }
-          if (scale.height !== undefined && scale.height >= this.svgHeight) {
-            scaling.push(scale.paths)
-          }
-        })
-      }
-      this.scaling = scaling
-      return scaling
     },
 
     setDark () {

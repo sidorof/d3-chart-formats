@@ -6,55 +6,13 @@
  *    titles
  *
  * A panel is defined by the number of pixels away from the panel.
- * For example, if panel.top = 40, then after the top panel is
+ * For example, if panel.coords.top = 40, then after the top panel is
  * calculated, the panel extends down 40 more pixels.
  *
  * The point of it is to be able to define an area where such things
  * as titles or axes or legends go.
  *
  * panel: { top, right, bottom, left}
- *
- * NOTE: it might make sense to put color in this as well. It would
- * need to take into a account that color might be different in various
- * areas of the panels.
- *
- * Here is a minimal chartParams:
- * chartParams: {
- *   styles: [['background', '#9a9a9a']],
- *   className: 'chart',
- *   panel: {                  see how styles apply to all panels
- *     top: 60,
- *     bottom: 40,
- *     right: 40,
- *     left: 40,
- *     className: 'panel',
- *     styles: [
- *       ['fill', 'blue'],
- *       ['stroke', 'green']
- *     ]
- *   },
- *   margin: { top: 0.0, right: 0.0, bottom: 0.0, left: 0.0 },
- *   titles: [                  text has default of
- *                                'text-anchor', 'middle'
- *                                but just override
- *     {
- *       text: 'My Title Here',
- *       x: '50%',
- *       y: 25,
- *       styles: [
- *         ['font-size', 24]
- *       ]
- *     },
- *     {
- *       text: 'Whoa! subtitles',
- *       x: '50%',
- *       y: 45,
- *       styles: [
- *         ['font-size', 14]
- *       ]
- *     }
- *   ]
- * }
  *
  * So this is the plot prototype which is extended to
  *   line charts
@@ -74,7 +32,9 @@ export class D3Plot extends D3Base {
     super(otherPayload)
 
     const dfltPanel = {
-      top: 30, bottom: 0, right: 0, left: 0, styles: {} }
+      coords: { top: 30, bottom: 0, right: 0, left: 0 },
+      styles: {}
+    }
 
     this.panel = { ...dfltPanel, ...panel }
     this.panel1 = panel1 // change this name
@@ -89,33 +49,32 @@ export class D3Plot extends D3Base {
   }
 
   panelCoords = (height, width) => {
-    const panel = {}
+    // const panel = { ...this.panel }
+    const panel = JSON.parse(JSON.stringify(this.panel))
     const panel1 = this.panel1
 
     if (height > panel1.heightRange.max) {
-      panel.top = panel1.top.max
-      panel.bottom = panel1.bottom.max
+      panel.coords.top = panel1.top.max
+      panel.coords.bottom = panel1.bottom.max
     } else if (height < panel1.heightRange.min) {
-      panel.top = panel1.top.min
-      panel.bottom = panel1.bottom.min
+      panel.coords.top = panel1.top.min
+      panel.coords.bottom = panel1.bottom.min
     } else {
       // (height - 200) / (300 - 200) * (70 - 20) + 20 = x
-      panel.top = calcProportion(
+      panel.coords.top = calcProportion(
         height,
         panel1.heightRange,
         { max: panel1.top.max, min: panel1.top.min }
       )
 
-      panel.bottom = calcProportion(
+      panel.coords.bottom = calcProportion(
         height,
         panel1.heightRange,
         { max: panel1.bottom.max, min: panel1.bottom.min }
       )
     }
 
-    panel.left = this.panel.left
-    panel.right = this.panel.right
-    panel.styles = { ...panel1.styles }
+    panel.styles = { ...panel1.styles, ...panel.styles }
     panel.className = panel1.className
     this.panel = panel
     return panel
@@ -123,58 +82,58 @@ export class D3Plot extends D3Base {
 
   addPanels = (svg, height, width) => {
     const panel = this.panelCoords(height, width)
-    if (panel.top) {
+    if (panel.coords.top) {
       this.addRect({
         svg: svg,
         top: 0,
         left: 0,
         className: panel.className,
-        styles: this.panel.styles,
+        styles: { ...panel.styles, ...panel.topPanel.styles },
         width: width,
-        height: panel.top > 0
-          ? panel.top
+        height: panel.coords.top > 0
+          ? panel.coords.top
           : 1
       })
     }
 
-    if (panel.left) {
+    if (panel.coords.left) {
       this.addRect({
         svg: svg,
-        top: panel.top - 1,
+        top: panel.coords.top - 1,
         left: 0,
         className: panel.className,
-        styles: panel.styles,
-        width: panel.left,
-        height: height - panel.top - panel.bottom > 0
-          ? height - panel.top - panel.bottom + 2 // why +2
+        styles: { ...panel.styles, ...panel.leftPanel.styles },
+        width: panel.coords.left,
+        height: height - panel.coords.top - panel.coords.bottom > 0
+          ? height - panel.coords.top - panel.coords.bottom + 2 // why +2
           : 1
       })
     }
 
-    if (panel.right) {
+    if (panel.coords.right) {
       this.addRect({
         svg: svg,
-        top: panel.top - 1,
-        left: width - panel.right,
+        top: panel.coords.top - 1,
+        left: width - panel.coords.right,
         className: panel.className,
-        styles: panel.styles,
-        width: panel.right,
-        height: height - panel.top - panel.bottom > 0
-          ? height - panel.top - panel.bottom + 2
+        styles: { ...panel.styles, ...panel.rightPanel.styles },
+        width: panel.coords.right,
+        height: height - panel.coords.top - panel.coords.bottom > 0
+          ? height - panel.coords.top - panel.coords.bottom + 2
           : 1
       })
     }
 
-    if (panel.bottom) {
+    if (panel.coords.bottom) {
       this.addRect({
         svg: svg,
-        top: height - panel.bottom,
+        top: height - panel.coords.bottom,
         left: 0,
         className: panel.className,
-        styles: panel.styles,
+        styles: { ...panel.styles, ...panel.bottomPanel.styles },
         width: width,
-        height: panel.bottom > 0
-          ? panel.bottom
+        height: panel.coords.bottom > 0
+          ? panel.coords.bottom
           : 1
       })
     }
@@ -215,15 +174,16 @@ export class D3Plot extends D3Base {
     for (const lineNo in this.titles) {
       // determine y position
       var title = JSON.parse(JSON.stringify(this.titles[lineNo]))
-
-      if (title.y.endsWith('%')) {
-        title.y = this.panel.top * title.y.slice(0, -1) / 100
+      if (title !== undefined) {
+        if (title.y.endsWith('%')) {
+          title.y = this.panel.coords.top * title.y.slice(0, -1) / 100
+        }
+        // this portion applies to scaling font-size up or down
+        const scaleBasis = {
+          value: height, ...this.panel1.heightRange
+        }
+        svgText(svg, title, scaleBasis)
       }
-      // this portion applies to scaling font-size up or down
-      const scaleBasis = {
-        value: height, ...this.panel1.heightRange
-      }
-      svgText(svg, title, scaleBasis)
     }
   }
 }
