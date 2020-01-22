@@ -8,14 +8,16 @@ To that end, I have created some classes and functions to make the charts and im
 
 This is a work in progress.
 
-The current version can be seen at https://sidorof.github.io/d3-chart-formats/
+Demo at https://sidorof.github.io/d3-chart-formats/
 
 
 General strategy:
 
 Exploring resizing first: As the chart is resized up or down, a simple mechanism slots in style changes to adjust proportions, font sizes and other characteristics to keep the chart useful at a wide range of resolutions.
 
-The next step will be to create the mechanism that applies the thematic elements to various kinds of charts.
+Modifications as transactions has now been added. A path that represents a leaf on the config tree can be used to adjust characteristics of the graph to implement the elements of a theme. There are also a few examples of themes.
+
+The next step will be to express classes that implement various types of graphs.
 
 D3 class organization
 ```
