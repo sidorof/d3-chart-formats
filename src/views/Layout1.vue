@@ -176,7 +176,6 @@ export default {
     },
     hasColors () {
       if (this.currentMod.colors !== undefined) {
-        console.log('this.currentMod.colors', this.currentMod.colors)
         if (Object.keys(this.currentMod.colors).length > 0) {
           return true
         }
