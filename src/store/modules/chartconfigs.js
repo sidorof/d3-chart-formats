@@ -111,20 +111,20 @@ const state = {
       mods: [
         { path: 'name', value: 'blue 2' },
         { path: 'styles.background', value: '#121c43' },
-        { path: 'panel.styles.fill', value: '#43121d' },
+        { path: 'panel.styles.fill', value: '#003f43' },
 
-        { path: 'axes.styles.stroke', value: '#c2c2c5' },
+        { path: 'axes.styles.stroke', value: '#dfdfe1' },
         { path: 'axes.xAxis.stroke', value: '#373740' },
-        { path: 'axes.yAxis.stroke', value: '#c2c2c5' },
+        { path: 'axes.yAxis.stroke', value: '#dfdfe1' },
         { path: 'axes.yRightAxis.stroke', value: '#373740' },
         //
-        { path: 'axes.xAxis.label.fill', value: '#c2c2c5' },
-        { path: 'axes.yAxis.label.fill', value: '#c2c2c5' },
-        { path: 'axes.yRightAxis.label.fill', value: '#c2c2c5' },
+        { path: 'axes.xAxis.label.fill', value: '#dfdfe1' },
+        { path: 'axes.yAxis.label.fill', value: '#dfdfe1' },
+        { path: 'axes.yRightAxis.label.fill', value: '#dfdfe1' },
         { path: 'axes.grids.vertical.stroke', value: '#444' },
         { path: 'axes.grids.vertical.stroke', value: '#444' },
-        { path: 'titles.1.styles.fill', value: '#c2c2c5' },
-        { path: 'titles.2.styles.fill', value: '#c2c2c5' }
+        { path: 'titles.1.styles.fill', value: '#dfdfe1' },
+        { path: 'titles.2.styles.fill', value: '#dfdfe1' }
       ]
     },
 

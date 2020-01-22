@@ -30,24 +30,68 @@
         </v-slider>
       </v-card>
 
-    <v-card
-        class="mx-auto"
-        max-width="400"
-        tile
-    >
-        Themes
-        <v-list-item
-            v-for="(modId1, i) in getModIds"
-            :key=i
-            @click="applyMods(getDefaultConfig, modId1)"
+    <v-card flat tile>
+    <v-card-title class="heading text-center">Themes</v-card-title>
+      <template>
+        <v-card-actions class="justify-space-between">
+        <v-col cols="2">
+          <v-btn
+            text
+            @click="prev"
+          >
+            <v-icon>mdi-chevron-left</v-icon>
+          </v-btn>
+          </v-col>
+          <v-col cols="8">
+            <v-card>
+              <div align="center" class="text-center" mandatory>
+                <v-card-title class="body" >{{ modId }}</v-card-title>
+              </div>
+            </v-card>
+          </v-col >
+          <v-col cols="2">
+          <v-btn
+            text
+            @click="next"
+          >
+            <v-icon>mdi-chevron-right</v-icon>
+          </v-btn>
+          </v-col>
+        </v-card-actions>
+      </template>
+      <v-window v-model="onboarding" horizontal>
+        <v-window-item
+          v-for="(modId, i) in getModIds"
+          :key=i
         >
-        <v-list-item-content>
-            <v-list-item-title
-            >{{ modId1 }}
-            </v-list-item-title>
-
-        </v-list-item-content>
-        </v-list-item>
+          <v-card color="#555" class="ml-2 pl-3">
+            <v-card-title class="title" >Modifications to Tree</v-card-title>
+            <div v-if="hasColors">
+              <div>uses color labels</div>
+              <v-card
+                color="#aaa" class="mb-3 px-5 black--text"
+                v-for="(color, j) in Object.keys(currentMod.colors)"
+                :key="j"
+              >
+                <div> {{ color }}: {{ currentMod.colors[color]}}</div>
+              </v-card>
+            </div>
+            <div>{{ getMod({ id: modId }).desc }}</div>
+            <div
+              v-for="(mod, n) in getMod({ id: modId }).mods"
+              :key=n
+              class="ml-5"
+            >
+              <v-row >
+                <v-card color="#aaa" class="mb-3 px-5 black--text">
+                  <div class="body-2">/{{mod.path}}</div>
+                  <div >value: {{ mod.value }}</div>
+                </v-card>
+              </v-row>
+            </div>
+          </v-card>
+        </v-window-item>
+      </v-window>
     </v-card>
 
     </v-col>
@@ -100,23 +144,19 @@ export default {
     svgHeightMin: '40',
     svgHeightMax: '1000',
 
-    modId: null,
-    scaling: []
+    modId: 'default',
+    currentMod: {},
+    scaling: [],
+    onboarding: 0,
+    length: 3
   }),
   mounted: function () {
     window.addEventListener('resize', this.handleWindowResize)
     this.setRefreshChart({ value: true })
+    this.length = this.numMods
   },
   beforeDestroy: function () {
     window.removeEventListener('resize', this.handleWindowResize)
-  },
-  watch: {
-    svgWidth: function (newData) {
-      // this.getScaleBreaks()
-    },
-    svgHeight: function (newData) {
-      // this.getScaleBreaks()
-    }
   },
   computed: {
     ...mapGetters({
@@ -130,6 +170,17 @@ export default {
     },
     getModIds () {
       return Object.keys(this.getMods)
+    },
+    numMods () {
+      return this.getModIds.length
+    },
+    hasColors () {
+      if (this.currentMod.colors !== undefined) {
+        if (Object.keys(this.currentMod.colors).length > 0) {
+          return true
+        }
+      }
+      return false
     }
   },
 
@@ -142,11 +193,7 @@ export default {
     }),
 
     refreshChart () {
-      // this.applyMods(this.getDefaultConfig, this.modId)
       this.setRefreshChart({ value: true })
-      // this.$nextTick(() => {
-      //   this.$vuetify.goTo(0)
-      // })
     },
 
     applyMods (config, modId) {
@@ -173,6 +220,23 @@ export default {
       }
     },
 
+    next () {
+      this.onboarding = this.onboarding + 1 === this.length
+        ? 0
+        : this.onboarding + 1
+      this.modId = this.getModIds[this.onboarding]
+      this.currentMod = this.getMod({ id: this.modId })
+      this.applyMods(this.getDefaultConfig, this.modId)
+    },
+    prev () {
+      this.onboarding = this.onboarding - 1 < 0
+        ? this.length - 1
+        : this.onboarding - 1
+      this.modId = this.getModIds[this.onboarding]
+      this.currentMod = this.getMod({ id: this.modId })
+      this.applyMods(this.getDefaultConfig, this.modId)
+    },
+
     combineMods (config, mods, colors) {
       var params = JSON.parse(JSON.stringify(config))
       colors = JSON.parse(JSON.stringify(colors))
@@ -191,38 +255,6 @@ export default {
         }
       })
       return params
-    },
-
-    setDark () {
-      const changes = [
-        { path: 'panel.styles.fill', value: '#333' },
-
-        { path: 'axes.xAxis.styles.fill', value: 'white' },
-        { path: 'axes.yAxis.styles.fill', value: 'white' },
-        { path: 'axes.yRightAxis.styles.fill', value: 'white' },
-
-        { path: 'axes.xAxis.stroke', value: 'white' },
-        { path: 'axes.yAxis.stroke', value: 'white' },
-        { path: 'axes.yRightAxis.stroke', value: 'white' },
-
-        { path: 'axes.xAxis.label.fill', value: 'white' },
-        { path: 'axes.yAxis.label.fill', value: 'white' },
-        { path: 'axes.yRightAxis.label.fill', value: 'white' }
-      ]
-      changes.forEach(change => {
-        const branch = change.path.split('.').slice(0, -1)
-        const leaf = change.path.split('.').slice(-1)
-        var part = this.params
-        for (var i = 0; i < branch.length; i++) {
-          part = part[branch[i]]
-        }
-        part[leaf] = change.value
-      })
-
-      this.setConfig({ id: 'currentConfig', ...this.params })
-      this.$nextTick(() => {
-        this.$vuetify.goTo(0)
-      })
     }
   }
 }
