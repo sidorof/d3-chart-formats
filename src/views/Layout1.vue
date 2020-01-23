@@ -14,6 +14,7 @@
           thumb-label="always"
           thumb-size="24"
           @click="refreshChart()"
+          thumb-color="#232d6c"
         >
         </v-slider>
         <v-slider
@@ -26,6 +27,7 @@
           thumb-size="24"
           hint="Control the width in pixels of the plot"
           @click="refreshChart()"
+          thumb-color="#232d6c"
         >
         </v-slider>
       </v-card>
@@ -43,9 +45,11 @@
           </v-btn>
           </v-col>
           <v-col cols="8">
-            <v-card>
-              <div align="center" class="text-center" mandatory>
-                <v-card-title class="body" >{{ modId }}</v-card-title>
+            <v-card class="text-center">
+              <div>
+                <v-card-title class="body">
+                  {{ modId }}
+                </v-card-title>
               </div>
             </v-card>
           </v-col >
