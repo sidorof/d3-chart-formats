@@ -186,6 +186,73 @@ const state = {
       ]
     },
 
+    'simplified 1': {
+      desc: 'stripping out detail',
+      colors: {},
+      sampleData: {
+        ts: { columns: 5, length: 6 }
+      },
+      mods: [
+        { path: 'name', value: 'blue 2' },
+        // { path: 'axes.xAxis.show', value: false },
+        { path: 'axes.yAxis.label.text', value: '' },
+        { path: 'axes.xAxis.label.text', value: 'none' },
+        { path: 'axes.xAxis.show', value: false },
+        { path: 'axes.yAxis.show', value: false },
+        // { path: 'axes.yRightAxis.show', value: false },
+        { path: 'data.path.strokeWidth', value: 4.0 },
+        { path: 'data.path.dots.useDots', value: true }
+        // useStroke: false,
+        // useFill: true,
+        // radius: 8,
+      ]
+    },
+
+    'simplified 2': {
+      desc: 'stripping out detail, large hollow dots',
+      colors: {},
+      // sampleData: {
+      //  ts: { columns: 5, length: 6 }
+      // },
+      mods: [
+        { path: 'name', value: 'blue 2' },
+        // { path: 'axes.xAxis.show', value: false },
+        { path: 'axes.yAxis.label.text', value: '' },
+        { path: 'axes.xAxis.label.text', value: 'none' },
+        { path: 'axes.xAxis.show', value: false },
+        { path: 'axes.yAxis.show', value: false },
+        { path: 'data.path.strokeWidth', value: 4.0 },
+        { path: 'data.path.dots.useDots', value: true },
+        { path: 'data.path.dots.useStroke', value: true },
+        { path: 'data.path.dots.useFill', value: false },
+        { path: 'data.path.dots.strokeWidth', value: 4 },
+        { path: 'data.path.dots.radius', value: 12 }
+      ]
+    },
+
+    'simplified 3': {
+      desc: 'only dots',
+      colors: {},
+      sampleData: {
+        ts: { columns: 2, length: 25 }
+      },
+      mods: [
+        { path: 'name', value: 'blue 2' },
+        { path: 'axes.xAxis.scaleFactor', value: 0.1 },
+        { path: 'axes.yAxis.label.text', value: '' },
+        { path: 'axes.xAxis.label.text', value: 'none' },
+        { path: 'axes.xAxis.show', value: false },
+        { path: 'axes.yAxis.show', value: false },
+        { path: 'data.path.useLines', value: false },
+        { path: 'data.path.strokeWidth', value: 4.0 },
+        { path: 'data.path.dots.useDots', value: true },
+        { path: 'data.path.dots.useStroke', value: true },
+        { path: 'data.path.dots.useFill', value: true },
+        { path: 'data.path.dots.strokeWidth', value: 4 },
+        { path: 'data.path.dots.radius', value: 4 }
+      ]
+    },
+
     'generic': {
       desc: 'mostly white',
       colors: {},

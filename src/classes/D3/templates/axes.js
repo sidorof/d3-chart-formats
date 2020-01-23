@@ -22,9 +22,11 @@ const axes = {
     ticks: {
       range: { max: 10, min: 3 }
     },
-    styles: {}
+    styles: {},
+    show: true
   },
   yAxis: {
+    scaleFactor: 0.05,
     label: {
       className: 'axisLabel',
       text: 'ylabel',
@@ -36,7 +38,8 @@ const axes = {
       }
     },
     ticks: '5',
-    styles: {}
+    styles: {},
+    show: true
   },
   yRightAxis: {
     label: {
@@ -47,7 +50,8 @@ const axes = {
       styles: {}
     },
     ticks: 5,
-    styles: {}
+    styles: {},
+    show: true
   },
   grids: {
     horizontal: {
@@ -62,7 +66,8 @@ const axes = {
       strokeWidth: '1.0',
       opacity: 1.0
     }
-  }
+  },
+  hide: false
 }
 
 export default axes

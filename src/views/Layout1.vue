@@ -199,7 +199,8 @@ export default {
       setConfig: 'chart/setConfig',
       setRefreshChart: 'chart/setRefreshChart',
       setMods: 'chart/setMods',
-      scaleMod: 'chart/scaleMod'
+      scaleMod: 'chart/scaleMod',
+      createTimeseries: 'sample/createTimeseries'
     }),
 
     refreshChart () {
@@ -237,6 +238,7 @@ export default {
       this.modId = this.getModIds[this.onboarding]
       this.currentMod = this.getMod({ id: this.modId })
       this.applyMods(this.getDefaultConfig, this.modId)
+      this.updateData()
     },
     prev () {
       this.onboarding = this.onboarding - 1 < 0
@@ -245,6 +247,23 @@ export default {
       this.modId = this.getModIds[this.onboarding]
       this.currentMod = this.getMod({ id: this.modId })
       this.applyMods(this.getDefaultConfig, this.modId)
+      this.updateData()
+    },
+
+    updateData () {
+      // sampleData in mod, update data
+      const mod = this.currentMod
+      if (mod.sampleData !== undefined && mod.sampleData !== null) {
+        // force to timeseries for the moment
+        const sampleData = JSON.parse(JSON.stringify(mod.sampleData))
+        console.log('sampleData', sampleData)
+        this.createTimeseries({
+          key: 'ts1',
+          numColumns: sampleData.ts.columns,
+          length: sampleData.ts.length
+        })
+        this.refreshChart()
+      }
     },
 
     combineMods (config, mods, colors) {

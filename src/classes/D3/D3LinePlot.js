@@ -63,83 +63,94 @@ export class D3LinePlot extends D3Plot {
         ).toString()))
       // .ticks(d3.timeMonth.every(1))
 
-    var axisXLine = svg.append('g')
-      .attr('class', 'x-axis axis')
-      .attr(
-        'transform',
-        this.createTranslate(panel.coords.left, height - panel.coords.bottom)
-      )
-      .call(axisX)
+    if (this.axes.xAxis.show) {
+      var axisXLine = svg.append('g')
+        .attr('class', 'x-axis axis')
+        .attr(
+          'transform',
+          this.createTranslate(panel.coords.left, height - panel.coords.bottom)
+        )
+        .call(axisX)
 
-    applyStyles(axisXLine, axes.styles, {})
-    axisXLine.exit().remove()
-
+      applyStyles(axisXLine, axes.styles, {})
+      axisXLine.exit().remove()
+    }
     // tie this in to line class names
-    var grid = svg.selectAll('line.horizontalGrid')
-      .data(scaleY.ticks())
+    if (this.axes.yAxis.show) {
+      // separate from section below, could be
+      // show grid, not ticks with separate paramter
+      var grid = svg.selectAll('line.horizontalGrid')
+        .data(scaleY.ticks())
 
-    grid.enter()
-      .append('line')
-      .attr('class', axes.grids.horizontal.className)
-      .attr('x1', panel.coords.left)
-      .attr('x2', width - panel.coords.right)
-      .attr('stroke', axes.grids.horizontal.stroke)
-      .attr('stroke-width', axes.grids.horizontal.strokeWidth)
-      .attr('opacity', axes.grids.horizontal.opacity)
+      grid.enter()
+        .append('line')
+        .attr('class', axes.grids.horizontal.className)
+        .attr('x1', panel.coords.left)
+        .attr('x2', width - panel.coords.right)
+        .attr('stroke', axes.grids.horizontal.stroke)
+        .attr('stroke-width', axes.grids.horizontal.strokeWidth)
+        .attr('opacity', axes.grids.horizontal.opacity)
 
-      .merge(grid)
-      .attr('y1', scaleY)
-      .attr('y2', scaleY)
-      .attr(
-        'transform',
-        this.createTranslate(0, panel.coords.top)
-      )
+        .merge(grid)
+        .attr('y1', scaleY)
+        .attr('y2', scaleY)
+        .attr(
+          'transform',
+          this.createTranslate(0, panel.coords.top)
+        )
 
-    grid.exit().remove()
+      grid.exit().remove()
+    }
 
-    var axisYLine = svg.append('g')
-      .attr('class', 'y-axis axis')
-      .attr(
-        'transform',
-        this.createTranslate(panel.coords.left, panel.coords.top)
-      )
-      .call(axisY)
+    if (this.axes.yAxis.show) {
+      var axisYLine = svg.append('g')
+        .attr('class', 'y-axis axis')
+        .attr(
+          'transform',
+          this.createTranslate(panel.coords.left, panel.coords.top)
+        )
+        .call(axisY)
 
-    applyStyles(axisYLine, axes.styles, {})
-    axisYLine.exit().remove()
+      applyStyles(axisYLine, axes.styles, {})
+      axisYLine.exit().remove()
+    }
 
-    var axisYRLine = svg.append('g')
-      .attr('class', 'y-axis axis')
-      .attr(
-        'transform',
-        this.createTranslate(width - panel.coords.right, panel.coords.top)
-      )
-      .call(axisYr)
+    if (this.axes.yAxis.show) {
+      var axisYRLine = svg.append('g')
+        .attr('class', 'y-axis axis')
+        .attr(
+          'transform',
+          this.createTranslate(width - panel.coords.right, panel.coords.top)
+        )
+        .call(axisYr)
 
-    applyStyles(axisYRLine, axes.styles, {})
-    axisYRLine.exit().remove()
+      applyStyles(axisYRLine, axes.styles, {})
+      axisYRLine.exit().remove()
+    }
 
-    grid = svg.selectAll('line.verticalGrid')
-      .data(scaleX.ticks())
+    if (this.axes.xAxis.show) {
+      grid = svg.selectAll('line.verticalGrid')
+        .data(scaleX.ticks())
 
-    grid.enter()
-      .append('line')
-      .attr('class', axes.grids.vertical.className)
-      .attr('y1', panel.coords.top)
-      .attr('y2', height - panel.coords.bottom)
-      .attr('stroke', axes.grids.vertical.stroke)
-      .attr('stroke-width', axes.grids.vertical.strokeWidth)
-      .attr('opacity', axes.grids.vertical.opacity)
+      grid.enter()
+        .append('line')
+        .attr('class', axes.grids.vertical.className)
+        .attr('y1', panel.coords.top)
+        .attr('y2', height - panel.coords.bottom)
+        .attr('stroke', axes.grids.vertical.stroke)
+        .attr('stroke-width', axes.grids.vertical.strokeWidth)
+        .attr('opacity', axes.grids.vertical.opacity)
 
-      .merge(grid)
-      .attr('x1', scaleX)
-      .attr('x2', scaleX)
-      .attr(
-        'transform',
-        this.createTranslate(panel.coords.left + 0.5, 0)
-      )
+        .merge(grid)
+        .attr('x1', scaleX)
+        .attr('x2', scaleX)
+        .attr(
+          'transform',
+          this.createTranslate(panel.coords.left + 0.5, 0)
+        )
 
-    grid.exit().remove()
+      grid.exit().remove()
+    }
 
     var label = axes.yAxis.label
     const scaleBasis = {
@@ -185,6 +196,9 @@ export class D3LinePlot extends D3Plot {
     }
 
     label = axes.xAxis.label
+    label.text = label.text === 'none'
+      ? label.text = ''
+      : label.text
 
     if (label.text !== undefined || label.text !== '') {
       text = svg.append('text')
