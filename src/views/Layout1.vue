@@ -68,26 +68,32 @@
             <v-card-title class="title" >Modifications to Tree</v-card-title>
             <div v-if="hasColors">
               <div>uses color labels</div>
+              <v-col >
               <v-card
-                color="#aaa" class="mb-3 px-5 black--text"
+                color="#aaa" class="mb-3 mr-4 px-5 black--text"
                 v-for="(color, j) in Object.keys(currentMod.colors)"
                 :key="j"
               >
-                <div> {{ color }}: {{ currentMod.colors[color]}}</div>
+                <div> {{ color }}: {{ getColor(currentMod.colors, color)}}</div>
+
+                <v-icon large :color="getColor(currentMod.colors, color)"> mdi-card </v-icon>
               </v-card>
+              </v-col>
             </div>
             <div>{{ getMod({ id: modId }).desc }}</div>
             <div
               v-for="(mod, n) in getMod({ id: modId }).mods"
               :key=n
-              class="ml-5"
             >
-              <v-row >
-                <v-card color="#aaa" class="mb-3 px-5 black--text">
+              <v-col >
+                <v-card color="#aaa" class="mr-4 px-5 black--text">
                   <div class="body-2">/{{mod.path}}</div>
                   <div >value: {{ mod.value }}</div>
+                  <v-icon v-if="asColor(mod.value)" :color="asColor(mod.value)">
+                    mdi-card
+                  </v-icon>
                 </v-card>
-              </v-row>
+              </v-col>
             </div>
           </v-card>
         </v-window-item>
@@ -255,6 +261,18 @@ export default {
         }
       })
       return params
+    },
+    getColor (colorObj, color) {
+      return colorObj[color]
+    },
+    asColor (value) {
+      // doesn't check for color words, only hex
+      const strValue = value.toString()
+      if (strValue.startsWith('#')) {
+        return strValue
+      } else {
+        return false
+      }
     }
   }
 }
