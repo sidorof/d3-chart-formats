@@ -264,7 +264,6 @@ export default {
       if (mod.sampleData !== undefined && mod.sampleData !== null) {
         // force to timeseries for the moment
         const sampleData = JSON.parse(JSON.stringify(mod.sampleData))
-        console.log('sampleData', sampleData)
         this.createTimeseries({
           key: 'ts1',
           numColumns: sampleData.ts.columns,
