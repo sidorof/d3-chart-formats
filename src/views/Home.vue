@@ -1,67 +1,5 @@
 <template>
   <v-card>
-    <div>
-      <v-expansion-panels>
-        <v-expansion-panel>
-          <v-expansion-panel-header>Update Data</v-expansion-panel-header>
-          <v-expansion-panel-content>
-            <v-form v-model="valid">
-              <v-container>
-                <v-row>
-                  <v-col
-                    cols="4"
-                  >
-                    <v-slider
-                      v-model="numColumns"
-                      label="Number of Columns"
-                      min="1"
-                      max="30"
-                      thumb-label
-                    >
-                      <template v-slot:append>
-                        <v-text-field
-                          v-model="numColumns"
-                          class="mt-0 pt-0"
-                          hide-details
-                          single-line
-                          type="number"
-                          style="width: 60px"
-                        ></v-text-field>
-                      </template>
-                    </v-slider>
-                    <v-slider
-                      v-model="length"
-                      label="Time Series Periods"
-                      thumb-label
-                      min="5"
-                      max="3000"
-                    >
-                      <template v-slot:append>
-                        <v-text-field
-                          v-model="length"
-                          class="mt-0 pt-0"
-                          hide-details
-                          single-line
-                          type="number"
-                          style="width: 60px"
-                        ></v-text-field>
-                      </template>
-                    </v-slider>
-                    <v-btn
-                        color="primary"
-                        @click="newData()"
-                    >
-                      Update Data
-                    </v-btn>
-                  </v-col>
-                </v-row>
-              </v-container>
-            </v-form>
-          </v-expansion-panel-content>
-        </v-expansion-panel>
-      </v-expansion-panels>
-    </div>
-
     <layout1 :params="params"/>
   </v-card>
 </template>
@@ -125,6 +63,9 @@ export default {
     newData (numColumns, length) {
       // prep for various plot types switch
       this.recalcTs(this.numColumns, this.length)
+      console.log('setting valid to false')
+      this.valid = false
+      console.log('this.valid', this.valid)
     }
   }
 }

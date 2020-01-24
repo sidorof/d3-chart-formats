@@ -1,139 +1,146 @@
 <template>
   <div class="mt-5">
-  <v-row>
-    <v-col cols="3">
-      <v-card width="300" style="padding: 0px;">
-        <v-slider
-          dense
-          v-model="svgHeight"
-          small
-          label="Height"
-          min="40"
-          max="1000"
-          hint="Control the height in pixels of the plot"
-          thumb-label="always"
-          thumb-size="24"
-          @click="refreshChart()"
-          thumb-color="#232d6c"
-        >
-        </v-slider>
-        <v-slider
-          dense
-          v-model="svgWidth"
-          label="Width"
-          min="40"
-          max="1800"
-          thumb-label="always"
-          thumb-size="24"
-          hint="Control the width in pixels of the plot"
-          @click="refreshChart()"
-          thumb-color="#232d6c"
-        >
-        </v-slider>
-      </v-card>
-
-    <v-card flat tile>
-    <v-card-title class="heading text-center">Themes</v-card-title>
-      <template>
-        <v-card-actions class="justify-space-between">
-        <v-col cols="2">
-          <v-btn
-            text
-            @click="prev"
-          >
-            <v-icon>mdi-chevron-left</v-icon>
-          </v-btn>
-          </v-col>
-          <v-col cols="8">
-            <v-card class="text-center">
-              <div>
-                <v-card-title class="body">
-                  {{ modId }}
-                </v-card-title>
-              </div>
-            </v-card>
-          </v-col >
-          <v-col cols="2">
-          <v-btn
-            text
-            @click="next"
-          >
-            <v-icon>mdi-chevron-right</v-icon>
-          </v-btn>
-          </v-col>
-        </v-card-actions>
-      </template>
-      <v-window v-model="onboarding" horizontal>
-        <v-window-item
-          v-for="(modId, i) in getModIds"
-          :key=i
-        >
-          <v-card color="#555" class="ml-2 pl-3">
-            <v-card-title class="title" >Modifications to Tree</v-card-title>
-            <div v-if="hasColors">
-              <div>uses color labels</div>
-              <v-col >
-              <v-card
-                color="#aaa" class="mb-3 mr-4 px-5 black--text"
-                v-for="(color, j) in Object.keys(currentMod.colors)"
-                :key="j"
-              >
-                <div> {{ color }}: {{ getColor(currentMod.colors, color)}}</div>
-
-                <v-icon large :color="getColor(currentMod.colors, color)"> mdi-card </v-icon>
-              </v-card>
-              </v-col>
-            </div>
-            <div>{{ getMod({ id: modId }).desc }}</div>
-            <div
-              v-for="(mod, n) in getMod({ id: modId }).mods"
-              :key=n
+    <v-row>
+      <v-col cols="3">
+        <v-row>
+          <sample-data class="mb-10" :dialog='dialog'/>
+        </v-row>
+        <v-row>
+          <v-card width="300" >
+            <v-slider
+              dense
+              v-model="svgHeight"
+              small
+              label="Height"
+              min="40"
+              max="1000"
+              hint="Control the height in pixels of the plot"
+              thumb-label="always"
+              thumb-size="24"
+              @click="refreshChart()"
+              thumb-color="#232d6c"
             >
-              <v-col >
-                <v-card color="#aaa" class="mr-4 px-5 black--text">
-                  <div class="body-2">/{{mod.path}}</div>
-                  <div >value: {{ mod.value }}</div>
-                  <v-icon v-if="asColor(mod.value)" :color="asColor(mod.value)">
-                    mdi-card
-                  </v-icon>
-                </v-card>
-              </v-col>
-            </div>
+            </v-slider>
+            <v-slider
+              dense
+              v-model="svgWidth"
+              label="Width"
+              min="40"
+              max="1800"
+              thumb-label="always"
+              thumb-size="24"
+              hint="Control the width in pixels of the plot"
+              @click="refreshChart()"
+              thumb-color="#232d6c"
+            >
+            </v-slider>
           </v-card>
-        </v-window-item>
-      </v-window>
-    </v-card>
+        </v-row>
+        <v-card flat tile>
+          <v-card-title class="heading text-center">Themes</v-card-title>
+          <template>
+            <v-card-actions class="justify-space-between">
+            <v-col cols="2">
+              <v-btn
+                text
+                @click="prev"
+              >
+                <v-icon>mdi-chevron-left</v-icon>
+              </v-btn>
+              </v-col>
+              <v-col cols="8">
+                <v-card class="text-center">
+                  <div>
+                    <v-card-title class="body">
+                      {{ modId }}
+                    </v-card-title>
+                  </div>
+                </v-card>
+              </v-col >
+              <v-col cols="2">
+              <v-btn
+                text
+                @click="next"
+              >
+                <v-icon>mdi-chevron-right</v-icon>
+              </v-btn>
+              </v-col>
+            </v-card-actions>
+          </template>
+          <v-window v-model="onboarding" horizontal>
+            <v-window-item
+              v-for="(modId, i) in getModIds"
+              :key=i
+            >
+              <v-card color="#555" class="ml-2 pl-3">
+                <v-card-title class="title" >Modifications to Tree</v-card-title>
+                <div>{{ getMod({ id: modId }).desc }}</div>
+                <div v-if="hasColors">
+                  <div class="pl-3">color labels</div>
+                  <v-col >
+                  <v-card
+                    color="#aaa" class="mb-3 mr-4 px-5 black--text"
+                    v-for="(color, j) in Object.keys(currentMod.colors)"
+                    :key="j"
+                  >
+                    <div> {{ color }}: {{ getColor(currentMod.colors, color)}}</div>
 
-    </v-col>
-    <v-col cols="9">
-    <div>
-      <v-card
-        justify-center
-        :height="svgHeight"
-        :width="svgWidth"
-        color="grey lighten-2"
-        flat
-        tile
-        outlined
-      >
-        <isolate
-          :startHeight="svgHeight"
-          :startWidth="svgWidth"
-          :params="params"
-          />
-      </v-card>
-    </div>
-    </v-col>
-  </v-row>
+                    <v-icon large :color="getColor(currentMod.colors, color)"> mdi-card </v-icon>
+                  </v-card>
+                  </v-col>
+                </div>
+                <div
+                  v-for="(mod, n) in getMod({ id: modId }).mods"
+                  :key=n
+                >
+                  <v-col >
+                    <v-card color="#aaa" class="mr-4 px-5 black--text">
+                      <div class="body-2">/{{mod.path}}</div>
+                      <div >value: {{ mod.value }}</div>
+                      <v-icon v-if="asColor(mod.value)" :color="asColor(mod.value)">
+                        mdi-card
+                      </v-icon>
+                    </v-card>
+                  </v-col>
+                </div>
+              </v-card>
+            </v-window-item>
+          </v-window>
+        </v-card>
+
+      </v-col>
+      <v-col cols="9">
+      <div>
+        <v-card
+          justify-center
+          :height="svgHeight"
+          :width="svgWidth"
+          color="grey lighten-2"
+          flat
+          tile
+          outlined
+        >
+          <isolate
+            :startHeight="svgHeight"
+            :startWidth="svgWidth"
+            :params="params"
+            />
+        </v-card>
+      </div>
+      </v-col>
+    </v-row>
   </div>
 </template>
 <script>
+import SampleData from '@/components/SampleData'
+
 import { mapGetters, mapActions } from 'vuex'
 import Isolate from '../components/Isolate'
 
 export default {
   components: {
-    isolate: Isolate
+    isolate: Isolate,
+    'sample-data': SampleData
   },
   props: {
     params: Object
@@ -158,7 +165,8 @@ export default {
     currentMod: {},
     scaling: [],
     onboarding: 0,
-    length: 3
+    length: 3,
+    dialog: false
   }),
   mounted: function () {
     window.addEventListener('resize', this.handleWindowResize)
@@ -199,7 +207,8 @@ export default {
       setConfig: 'chart/setConfig',
       setRefreshChart: 'chart/setRefreshChart',
       setMods: 'chart/setMods',
-      scaleMod: 'chart/scaleMod'
+      scaleMod: 'chart/scaleMod',
+      createTimeseries: 'sample/createTimeseries'
     }),
 
     refreshChart () {
@@ -237,6 +246,7 @@ export default {
       this.modId = this.getModIds[this.onboarding]
       this.currentMod = this.getMod({ id: this.modId })
       this.applyMods(this.getDefaultConfig, this.modId)
+      this.updateData()
     },
     prev () {
       this.onboarding = this.onboarding - 1 < 0
@@ -245,6 +255,23 @@ export default {
       this.modId = this.getModIds[this.onboarding]
       this.currentMod = this.getMod({ id: this.modId })
       this.applyMods(this.getDefaultConfig, this.modId)
+      this.updateData()
+    },
+
+    updateData () {
+      // sampleData in mod, update data
+      const mod = this.currentMod
+      if (mod.sampleData !== undefined && mod.sampleData !== null) {
+        // force to timeseries for the moment
+        const sampleData = JSON.parse(JSON.stringify(mod.sampleData))
+        console.log('sampleData', sampleData)
+        this.createTimeseries({
+          key: 'ts1',
+          numColumns: sampleData.ts.columns,
+          length: sampleData.ts.length
+        })
+        this.refreshChart()
+      }
     },
 
     combineMods (config, mods, colors) {
