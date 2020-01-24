@@ -72,38 +72,7 @@
               v-for="(modId, i) in getModIds"
               :key=i
             >
-              <v-card color="#555" class="ml-2 pl-3">
-                <v-card-title class="title" >Modifications to Tree</v-card-title>
-                <div>{{ getMod({ id: modId }).desc }}</div>
-                <div v-if="hasColors">
-                  <div class="pl-3">color labels</div>
-                  <v-col >
-                  <v-card
-                    color="#aaa" class="mb-3 mr-4 px-5 black--text"
-                    v-for="(color, j) in Object.keys(currentMod.colors)"
-                    :key="j"
-                  >
-                    <div> {{ color }}: {{ getColor(currentMod.colors, color)}}</div>
-
-                    <v-icon large :color="getColor(currentMod.colors, color)"> mdi-card </v-icon>
-                  </v-card>
-                  </v-col>
-                </div>
-                <div
-                  v-for="(mod, n) in getMod({ id: modId }).mods"
-                  :key=n
-                >
-                  <v-col >
-                    <v-card color="#aaa" class="mr-4 px-5 black--text">
-                      <div class="body-2">/{{mod.path}}</div>
-                      <div >value: {{ mod.value }}</div>
-                      <v-icon v-if="asColor(mod.value)" :color="asColor(mod.value)">
-                        mdi-card
-                      </v-icon>
-                    </v-card>
-                  </v-col>
-                </div>
-              </v-card>
+              <chart-mod :currentMod="currentMod" :modId="modId"/>
             </v-window-item>
           </v-window>
         </v-card>
@@ -133,14 +102,15 @@
 </template>
 <script>
 import SampleData from '@/components/SampleData'
-
+import Mod from '@/components/Mod'
 import { mapGetters, mapActions } from 'vuex'
 import Isolate from '../components/Isolate'
 
 export default {
   components: {
     isolate: Isolate,
-    'sample-data': SampleData
+    'sample-data': SampleData,
+    'chart-mod': Mod
   },
   props: {
     params: Object
@@ -191,14 +161,6 @@ export default {
     },
     numMods () {
       return this.getModIds.length
-    },
-    hasColors () {
-      if (this.currentMod.colors !== undefined) {
-        if (Object.keys(this.currentMod.colors).length > 0) {
-          return true
-        }
-      }
-      return false
     }
   },
 
@@ -291,18 +253,6 @@ export default {
         }
       })
       return params
-    },
-    getColor (colorObj, color) {
-      return colorObj[color]
-    },
-    asColor (value) {
-      // doesn't check for color words, only hex
-      const strValue = value.toString()
-      if (strValue.startsWith('#')) {
-        return strValue
-      } else {
-        return false
-      }
     }
   }
 }
