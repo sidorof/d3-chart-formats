@@ -17,6 +17,8 @@ Exploring resizing first: As the chart is resized up or down, a simple mechanism
 
 Modifications as transactions has now been added. A path that represents a leaf on the config tree can be used to adjust characteristics of the graph to implement the elements of a theme. There are also a few examples of themes.
 
+![Sample Date Line Chart](/public/img/sample_chart.png)
+
 The next step will be to express classes that implement various types of graphs.
 
 D3 class organization
