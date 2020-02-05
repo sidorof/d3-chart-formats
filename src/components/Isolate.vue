@@ -28,18 +28,21 @@ export default {
 
   mounted: function () {
     if (this.chartId !== undefined && this.chartId !== null) {
-      const chart = this.removeObserv(this.getChart({ id: this.chartId }))
-      this.ChartClass = this.getChartType({ id: chart.chartTypeId })
-        .ChartClass
-      this.drawChart()
+      let chart = this.getChart({ id: this.chartId })
+      if (chart !== undefined) {
+        chart = JSON.parse(JSON.stringify(chart))
+        this.ChartClass = this.getChartType({ id: chart.chartTypeId })
+          .ChartClass
+        this.drawChart()
+      }
     }
     window.addEventListener('resize', this.handleWindowResize)
   },
   watch: {
     chartId: function (newData) {
       if (newData !== undefined && this.chartId !== null) {
-        const chart = this.removeObserv(
-          this.getChart({ id: this.chartId }))
+        const chart = JSON.parse(
+          JSON.stringify(this.getChart({ id: this.chartId })))
         this.ChartClass = this.getChartType({ id: chart.chartTypeId })
           .ChartClass
         this.drawChart()
@@ -58,7 +61,7 @@ export default {
     },
 
     initChart: function (newData) {
-      newData = this.removeObserv(newData)
+      newData = JSON.parse(JSON.stringify(newData))
       this.ChartClass = this.getChartType({ id: newData.chartTypeId })
         .ChartClass
       this.drawChart()
@@ -92,12 +95,9 @@ export default {
       setRefreshChart: 'chart/setRefreshChart',
       applyConfigPrices: 'prices/applyConfigPrices'
     }),
-    removeObserv (obj) {
-      return JSON.parse(JSON.stringify(obj))
-    },
     refreshChart () {
-      const chart = this.removeObserv(
-        this.getChart({ id: this.chartId }))
+      const chart = JSON.parse(
+        JSON.stringify(this.getChart({ id: this.chartId })))
       this.params = chart.config
       this.ChartClass = this.getChartType({ id: chart.chartTypeId })
         .ChartClass
@@ -165,7 +165,8 @@ export default {
       return oldVal !== newVal
     },
     drawChart () {
-      const chart = this.removeObserv(this.getChart({ id: this.chartId }))
+      const chart = JSON.parse(
+        JSON.stringify(this.getChart({ id: this.chartId })))
       if (this.svgWidth !== null && this.svgHeight !== null) {
         var base = this.$d3.select(this.$el)
         const chartClassName = 'chart ma-0 pa-0'

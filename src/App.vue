@@ -51,7 +51,6 @@ export default {
   watch: {
     tab: function (newData) {
       this.setRefreshChart({ id: 'scale-test', value: true })
-      console.log('fired off')
     }
   },
   computed: {
