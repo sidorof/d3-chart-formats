@@ -64,7 +64,6 @@ const actions = {
       ts.data[dateKey] = values
     }
     ts.dateRange.endDate = dateKey
-
     commit('setTs', ts)
   }
 }

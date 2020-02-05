@@ -2,7 +2,7 @@
   <v-row justify="center">
     <v-btn
       color="primary"
-      light
+      class="black--text"
       @click.stop="dialogData = true"
     >
       Update Data

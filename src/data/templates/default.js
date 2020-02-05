@@ -4,7 +4,7 @@ import axes from './axes'
 class DefaultTheme {
   constructor ({ axes, data }) {
     this.name = 'default'
-    this.styles = { background: '#000' }
+    this.styles = {} // { background: '#000', opacity: 0.5 }
     this.className = 'chart'
 
     this.axes = axes
