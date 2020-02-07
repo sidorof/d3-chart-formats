@@ -62,18 +62,30 @@ export default {
     ...mapActions({
       setConfig: 'chart/setConfig',
       setRefreshChart: 'chart/setRefreshChart',
-      createTimeseries: 'sample/createTimeseries'
+      createTimeseries: 'sample/createTimeseries',
+      createLabeledData: 'sample/createLabeledData'
     }),
     createSampleData () {
       // timeseries long
-      this.createTimeseries({ key: 'ts1', numColumns: 3, length: 200 })
+      this.createTimeseries(
+        { key: 'date-line-plot', numColumns: 3, length: 200 })
 
       // timeseries short
       this.createTimeseries({ key: 'ts2', numColumns: 3, length: 15 })
-      // timeseries long with error bars
-      // timeseries short with error bars
+      this.createTimeseries({ key: 'ts3', numColumns: 5, length: 6 })
+
+      // error bars - just use numColumns as a multple of 3
+      // timeseries long
+      // timeseries short
+
       // x y data
+      this.createLabeledData({ key: 'xy1', numColumns: 7, length: 200 })
+      this.createLabeledData({ key: 'xy2', numColumns: 2, length: 15 })
+
       // pie data
+      this.createLabeledData({ key: 'labeled1', numColumns: 7, length: 1 })
+      this.createLabeledData({ key: 'labeled2', numLabels: 7, length: 1 })
+
       // network diagrams
     }
   }

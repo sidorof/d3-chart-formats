@@ -34,7 +34,7 @@ export default {
     ...mapGetters({
       getConfig: 'chart/getConfig',
       getDefaultConfig: 'chart/getDefaultConfig',
-      getTs: 'sample/getTs'
+      getData: 'sample/getData'
     })
   },
   methods: {

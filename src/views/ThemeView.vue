@@ -28,10 +28,12 @@
             </v-card-subtitle>
           </span>
           <isolate
+            v-if="getSampleData(modId, chartTypeId) !== undefined"
             :chartId="modId"
             :chartTypeId="chartTypeId"
             :svgHeight="svgHeight"
             :svgWidth="svgWidth"
+            :chartData="getSampleData(modId, chartTypeId)"
           />
         </v-card>
         </v-row>
@@ -100,7 +102,9 @@ export default {
       getMods: 'chart/getMods',
 
       // get particular mod
-      getMod: 'chart/getMod'
+      getMod: 'chart/getMod',
+
+      getData: 'sample/getData'
     }),
     getModIds () {
       // NOTE: this is a dupe
@@ -111,7 +115,8 @@ export default {
     ...mapActions({
       setConfig: 'chart/setConfig',
       setChart: 'chart/setChart',
-      setRefreshChart: 'chart/setRefreshChart'
+      setRefreshChart: 'chart/setRefreshChart',
+      createTimeseries: 'sample/createTimeseries'
     }),
     combineMods (config, mods, colors) {
       // NOTE: THIS IS ALSO A DUPE, FIND A COMMON HOME
@@ -132,6 +137,40 @@ export default {
         }
       })
       return params
+    },
+    getSampleData (modId, chartTypeId) {
+      /* getSampleData
+       * select the data appropriate for both the mod and chart type.
+       * stored in sample/data by key
+       * Options:
+       *   mod has no sampleData option
+       *     use the default key for the chart type
+       *   mod has a specific key for the chart type
+       *     ex. sampleData: { 'date-line-plot': 'ts3' }
+       *     use getData with that key
+       */     create the data, then pull from
+      console.log('getSampleData', modId, chartTypeId)
+      let modObj = this.getMod({ id: modId })
+
+      if (modObj !== undefined && modObj !== null) {
+        modObj = JSON.parse(JSON.stringify(modObj))
+        console.log('modObj', modObj)
+
+        if (modObj.sampleData !== undefined && modObj.sampleData !== null) {
+          const dataKey = modObj.sampleData[this.chartTypeId]
+          console.log('dataKey', dataKey)
+          const data = this.getData(dataKey)
+          if (data !== undefined) {
+            return JSON.parse(JSON.stringify(data))
+          }
+        }
+      } else {
+        // go with default
+        console.log(
+          'JSON.parse(JSON.stringify(this.getData(this.chartTypeId)))',
+          JSON.parse(JSON.stringify(this.getData(this.chartTypeId))))
+        return JSON.parse(JSON.stringify(this.getData(this.chartTypeId)))
+      }
     }
   }
 }

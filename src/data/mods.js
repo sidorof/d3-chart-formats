@@ -1,3 +1,34 @@
+/* Notes:
+ *
+ * sampleData:
+ *
+ * example:
+ * suppose it is specifically for a small number of items
+ * or vice versa
+ * sample data should cover all supported chart types
+ *
+ * sampleData: {
+      # should work for line, area under curve, bar, stacked bar
+      'date-line-plot': { columns: 5, length: 6 }   timeseries
+
+      labeled data: bar, stacked bar, pie
+      data: { items }   arrays
+
+      hierarchical data:
+        network diagrams
+          fixed, floating positions
+          node
+            shapes, labeling
+          connection
+            strength
+              color-coded
+              thickness
+              line type
+    },
+
+    sampleData:
+      ts_long
+ */
 const mods = {
   'default': { desc: 'default value for standard graphs', mods: [] },
   'dark 1': {
@@ -184,7 +215,7 @@ const mods = {
       textDark: '#000'
     },
     sampleData: {
-      ts: { columns: 5, length: 6 }
+      'date-line-plot': 'ts3'
     },
     mods: [
       { path: 'name', value: 'blue 2' },
@@ -217,7 +248,7 @@ const mods = {
     desc: 'stripping out detail',
     colors: {},
     sampleData: {
-      ts: { columns: 5, length: 6 }
+      'date-line-plot': 'ts3'
     },
     mods: [
       { path: 'name', value: 'blue 2' },
@@ -236,7 +267,8 @@ const mods = {
     desc: 'stripping out detail, large hollow dots',
     colors: {},
     sampleData: {
-      ts: { columns: 5, length: 6 }
+      'date-line-plot': 'ts3',
+      'labeled-data-plot': 'labeled1'
     },
     mods: [
       { path: 'name', value: 'blue 2' },
@@ -250,7 +282,7 @@ const mods = {
       { path: 'data.path.dots.useStroke', value: true },
       { path: 'data.path.dots.useFill', value: false },
       { path: 'data.path.dots.strokeWidth', value: 4 },
-      { path: 'data.path.dots.radius', value: 12 }
+      { path: 'data.path.dots.radius', value: 7 }
     ]
   },
 
@@ -258,7 +290,7 @@ const mods = {
     desc: 'only dots',
     colors: {},
     sampleData: {
-      ts: { columns: 2, length: 25 }
+      'date-line-plot': 'ts3'
     },
     mods: [
       { path: 'name', value: 'blue 2' },

@@ -5,6 +5,7 @@
     style="justify-content: center;"
     :height="svgHeight"
     :width="svgWidth"
+    :chartData="chartData"
   >
   </v-card>
 </template>
@@ -16,7 +17,8 @@ export default {
   props: {
     'chartId': String,
     'svgHeight': Number,
-    'svgWidth': Number
+    'svgWidth': Number,
+    'chartData': Object
   },
 
   data: () => ({
@@ -27,6 +29,7 @@ export default {
   }),
 
   mounted: function () {
+    console.log('mounted: chartData: this.chartData', this.chartData)
     if (this.chartId !== undefined && this.chartId !== null) {
       let chart = this.getChart({ id: this.chartId })
       if (chart !== undefined) {
@@ -48,11 +51,6 @@ export default {
         this.drawChart()
       }
     },
-    getTs: function (newData) {
-      if (newData !== null || newData !== undefined) {
-        this.drawChart()
-      }
-    },
     svgHeight: function (newData) {
       this.drawChart()
     },
@@ -61,10 +59,16 @@ export default {
     },
 
     initChart: function (newData) {
-      newData = JSON.parse(JSON.stringify(newData))
-      this.ChartClass = this.getChartType({ id: newData.chartTypeId })
-        .ChartClass
-      this.drawChart()
+      if (this.chartData !== undefined) {
+        console.log('watch: initChart: this.chartData', this.chartData)
+        newData = JSON.parse(JSON.stringify(newData))
+        this.ChartClass = this.getChartType({ id: newData.chartTypeId })
+          .ChartClass
+        this.drawChart()
+      }
+    },
+    chartData: function (newData) {
+      console.log('watch: chartData: this.chartData', newData)
     }
   },
   beforeDestroy: function () {
@@ -76,8 +80,7 @@ export default {
       getChart: 'chart/getChart',
       getChartType: 'chart/getChartType',
       getDefaultConfig: 'chart/getDefaultConfig',
-      getRefreshCharts: 'chart/getRefreshCharts',
-      getTs: 'sample/getTs'
+      getRefreshCharts: 'chart/getRefreshCharts'
     }),
     initChart () {
       return this.getChart({ id: this.chartId })
@@ -175,7 +178,7 @@ export default {
         const ChartClass = this.getChartType({ id: chart.chartTypeId })
           .ChartClass
         var plot = new ChartClass(
-          { d3: this.$d3, ts: this.getTs, ...chart.config })
+          { d3: this.$d3, chartData: this.chartData, ...chart.config })
 
         var svg = plot.createSvg(
           base, chartClassName, this.svgWidth, this.svgHeight)

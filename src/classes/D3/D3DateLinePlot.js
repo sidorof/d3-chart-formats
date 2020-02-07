@@ -15,10 +15,12 @@
 import { D3LinePlot } from '@/classes/D3/D3LinePlot'
 
 export class D3DateLinePlot extends D3LinePlot {
-  constructor ({ ts, data, ...otherPayload }) {
+  constructor ({ chartData, data, ...otherPayload }) {
     super(otherPayload)
-    this.ts = ts
-    this.data = data
+    // this is the timeseries, generic name due to other chart types
+    console.log('chartData', chartData)
+    this.ts = chartData
+    this.data = data // this is the defining path data from config
   }
 
   buildChart = (svg, height, width) => {
