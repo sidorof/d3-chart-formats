@@ -15,10 +15,10 @@ import { mapGetters, mapActions } from 'vuex'
 
 export default {
   props: {
-    'chartId': String,
-    'svgHeight': Number,
-    'svgWidth': Number,
-    'chartData': Object
+    chartId: String,
+    svgHeight: Number,
+    svgWidth: Number,
+    chartData: Object
   },
 
   data: () => ({
@@ -27,9 +27,7 @@ export default {
     params: null,
     ChartClass: null
   }),
-
   mounted: function () {
-    console.log('mounted: chartData: this.chartData', this.chartData)
     if (this.chartId !== undefined && this.chartId !== null) {
       let chart = this.getChart({ id: this.chartId })
       if (chart !== undefined) {
@@ -60,15 +58,11 @@ export default {
 
     initChart: function (newData) {
       if (this.chartData !== undefined) {
-        console.log('watch: initChart: this.chartData', this.chartData)
         newData = JSON.parse(JSON.stringify(newData))
         this.ChartClass = this.getChartType({ id: newData.chartTypeId })
           .ChartClass
         this.drawChart()
       }
-    },
-    chartData: function (newData) {
-      console.log('watch: chartData: this.chartData', newData)
     }
   },
   beforeDestroy: function () {
@@ -171,6 +165,7 @@ export default {
       const chart = JSON.parse(
         JSON.stringify(this.getChart({ id: this.chartId })))
       if (this.svgWidth !== null && this.svgHeight !== null) {
+        const chartData = JSON.parse(JSON.stringify(this.chartData))
         var base = this.$d3.select(this.$el)
         const chartClassName = 'chart ma-0 pa-0'
 
@@ -178,7 +173,7 @@ export default {
         const ChartClass = this.getChartType({ id: chart.chartTypeId })
           .ChartClass
         var plot = new ChartClass(
-          { d3: this.$d3, chartData: this.chartData, ...chart.config })
+          { d3: this.$d3, chartData: chartData, ...chart.config })
 
         var svg = plot.createSvg(
           base, chartClassName, this.svgWidth, this.svgHeight)

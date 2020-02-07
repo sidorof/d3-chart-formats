@@ -17,7 +17,7 @@ export default new Vuex.Store({
 
   },
   modules: {
-    'chart': chartConfigsStore,
-    'sample': sampleDataStore
+    chart: chartConfigsStore,
+    sample: sampleDataStore
   }
 })

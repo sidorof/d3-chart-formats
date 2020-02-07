@@ -6,7 +6,7 @@
         align="center"
         justify="center"
       >
-        <sample-data class="mb-10" :dialog='dialog'/>
+        <sample-data class="mb-10" :dialog='dialog' :dataKey="dataKey"/>
         <chart-types :chartId="chartId"/>
         <div>
         <v-card
@@ -116,6 +116,7 @@
     <v-col cols="10" class="d-flex flex-row mb-2 sx-12">
       <div>
         <v-card
+          v-if="getSampleData(modId, chartTypeId) !== undefined"
           justify-center
           :height="svgCtrlHeight"
           :width="svgCtrlWidth"
@@ -129,6 +130,7 @@
             :chartTypeId="chartTypeId"
             :svgHeight="svgCtrlHeight"
             :svgWidth="svgCtrlWidth"
+            :chartData="getSampleData(modId, chartTypeId)"
           />
         </v-card>
       </div>
@@ -157,9 +159,10 @@ export default {
     svgCtrlWidthMin: 40,
     svgCtrlHeightMin: 40,
 
-    chartId: 'scale-test',
+    chartId: 'dflt',
+    dataKey: 'scale-test',
     chartTypeId: 'date-line-plot',
-    modId: 'default',
+    modId: 'dflt',
     currentMod: { mods: [] },
     scaling: [],
     onboarding: 0,
@@ -167,6 +170,10 @@ export default {
     dialog: false
   }),
   created: function () {
+    // temporary
+    this.createTimeseries(
+      { key: 'scale-test', numColumns: 3, length: 200 })
+
     const config = this.getConfig({ id: this.modId })
     this.setChart({
       id: this.chartId,
@@ -194,7 +201,9 @@ export default {
       getMods: 'chart/getMods',
 
       // get particular mod
-      getMod: 'chart/getMod'
+      getMod: 'chart/getMod',
+
+      getData: 'sample/getData'
     }),
 
     svgCtrlHeight: {
@@ -334,7 +343,7 @@ export default {
         // force to timeseries for the moment
         const sampleData = JSON.parse(JSON.stringify(mod.sampleData))
         this.createTimeseries({
-          key: 'ts1',
+          key: 'date-line-plot',
           numColumns: sampleData.ts.columns,
           length: sampleData.ts.length
         })
@@ -360,6 +369,33 @@ export default {
         }
       })
       return params
+    },
+
+    getSampleData (modId, chartTypeId) {
+      /* getSampleData
+       * NOTE: DUPE WARNING, COPY IN Scaling: decide permanent home
+       * select the data appropriate for both the mod and chart type.
+       * stored in sample/data by key
+       * Options:
+       *   mod has no sampleData option
+       *     use the default key for the chart type
+       *   mod has a specific key for the chart type
+       *     ex. sampleData: { 'date-line-plot': 'ts3' }
+       *     use getData with that key
+       */
+      let modObj = this.getMod({ id: modId })
+      const dfltData = this.getData({ key: this.dataKey })
+
+      if (modObj !== undefined && modObj !== null) {
+        modObj = JSON.parse(JSON.stringify(modObj))
+        if (modObj.sampleData[this.chartTypeId] !== undefined) {
+          const dataKey = modObj.sampleData[this.chartTypeId]
+          return JSON.parse(JSON.stringify(this.getData({ key: dataKey })))
+        } else {
+          // go with default
+          return dfltData
+        }
+      }
     }
   }
 }

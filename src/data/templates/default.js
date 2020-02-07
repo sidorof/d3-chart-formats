@@ -42,7 +42,7 @@ class DefaultTheme {
     this.margin = { top: 0.0, right: 0.0, bottom: 0.0, left: 0.0 }
 
     this.titles = {
-      '1': {
+      1: {
         text: 'Main Chart Title',
         x: '50%',
         y: '42%',
@@ -50,10 +50,10 @@ class DefaultTheme {
           'font-size': {
             range: { max: 24, min: 10 }
           },
-          'fill': '#222'
+          fill: '#222'
         }
       },
-      '2': {
+      2: {
         text: 'Subtitle',
         x: '50%',
         y: '75%',
@@ -61,7 +61,7 @@ class DefaultTheme {
           'font-size': {
             range: { max: 14, min: 7 }
           },
-          'fill': '#222'
+          fill: '#222'
         }
       }
     }

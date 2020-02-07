@@ -24,7 +24,7 @@ export default {
   }),
   created: function () {
     this.createTimeseries({ key: 'ts1', numColumns: 3, length: 200 })
-    const configId = 'default'
+    const configId = 'dflt'
     this.setConfig({ id: configId, ...this.getDefaultConfig })
     this.setChart({
       id: this.id, configId: configId, width: null, height: null

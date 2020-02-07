@@ -11,15 +11,14 @@
  *  dot labels
  *
  */
-
+import { TS } from '@/classes/TS.class'
 import { D3LinePlot } from '@/classes/D3/D3LinePlot'
 
 export class D3DateLinePlot extends D3LinePlot {
   constructor ({ chartData, data, ...otherPayload }) {
     super(otherPayload)
     // this is the timeseries, generic name due to other chart types
-    console.log('chartData', chartData)
-    this.ts = chartData
+    this.ts = new TS(JSON.parse(JSON.stringify(chartData.ts)))
     this.data = data // this is the defining path data from config
   }
 
@@ -73,7 +72,8 @@ export class D3DateLinePlot extends D3LinePlot {
 
     const yRange = {
       min: ts.minValue() * (1 - axes.yAxis.scaleFactor),
-      max: ts.maxValue() * (1 + axes.yAxis.scaleFactor) }
+      max: ts.maxValue() * (1 + axes.yAxis.scaleFactor)
+    }
 
     this.parseTime = d3.timeParse('%Y-%m-%d')
 

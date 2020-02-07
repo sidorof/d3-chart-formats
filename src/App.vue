@@ -43,7 +43,7 @@ export default {
       'Explore Themes', 'Explore Scaling', 'Explore Chart Types'
     ]
   }),
-  mounted () {
+  created () {
     const config = JSON.parse(JSON.stringify(this.getDefaultConfig))
     this.setConfig({ id: 'default', ...config })
     this.createSampleData()
@@ -66,6 +66,8 @@ export default {
       createLabeledData: 'sample/createLabeledData'
     }),
     createSampleData () {
+      this.createTimeseries(
+        { key: 'scale-test', numColumns: 3, length: 200 })
       // timeseries long
       this.createTimeseries(
         { key: 'date-line-plot', numColumns: 3, length: 200 })
@@ -84,7 +86,7 @@ export default {
 
       // pie data
       this.createLabeledData({ key: 'labeled1', numColumns: 7, length: 1 })
-      this.createLabeledData({ key: 'labeled2', numLabels: 7, length: 1 })
+      this.createLabeledData({ key: 'labeled2', numColumns: 7, length: 1 })
 
       // network diagrams
     }

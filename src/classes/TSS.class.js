@@ -192,6 +192,7 @@ export class TSS {
     }
     return newTss
   }
+
   isEmpty = function () {
     return this.length() === 0
   }

@@ -19,7 +19,10 @@
           dark
           class="ma-2"
         >
-          <span secondary class="black--text">
+          <span secondary
+            class="black--text"
+            v-if="getSampleData(modId, chartTypeId) !== undefined"
+          >
             <v-card-title>{{ modId }}</v-card-title>
             <v-card-subtitle
               class="black--text"
@@ -28,7 +31,6 @@
             </v-card-subtitle>
           </span>
           <isolate
-            v-if="getSampleData(modId, chartTypeId) !== undefined"
             :chartId="modId"
             :chartTypeId="chartTypeId"
             :svgHeight="svgHeight"
@@ -67,12 +69,11 @@ export default {
   mounted: function () {
     const config = JSON.parse(
       JSON.stringify(this.getDefaultConfig))
-
     for (const modId in this.getMods) {
       const modObj = JSON.parse(
         JSON.stringify(this.getMod({ id: modId })))
       modObj.colors = modObj.colors !== undefined ? modObj.colors : {}
-      let mconfig = this.combineMods(config, modObj.mods, modObj.colors)
+      const mconfig = this.combineMods(config, modObj.mods, modObj.colors)
       this.setConfig({ id: modId, ...mconfig })
       this.setConfig({ ...mconfig, id: modId })
       this.setChart(
@@ -140,6 +141,7 @@ export default {
     },
     getSampleData (modId, chartTypeId) {
       /* getSampleData
+       * NOTE: DUPE WARNING, COPY IN Scaling: decide permanent home
        * select the data appropriate for both the mod and chart type.
        * stored in sample/data by key
        * Options:
@@ -148,28 +150,19 @@ export default {
        *   mod has a specific key for the chart type
        *     ex. sampleData: { 'date-line-plot': 'ts3' }
        *     use getData with that key
-       */     create the data, then pull from
-      console.log('getSampleData', modId, chartTypeId)
+       */
       let modObj = this.getMod({ id: modId })
+      const dfltData = this.getData({ key: this.chartTypeId })
 
       if (modObj !== undefined && modObj !== null) {
         modObj = JSON.parse(JSON.stringify(modObj))
-        console.log('modObj', modObj)
-
-        if (modObj.sampleData !== undefined && modObj.sampleData !== null) {
+        if (modObj.sampleData[this.chartTypeId] !== undefined) {
           const dataKey = modObj.sampleData[this.chartTypeId]
-          console.log('dataKey', dataKey)
-          const data = this.getData(dataKey)
-          if (data !== undefined) {
-            return JSON.parse(JSON.stringify(data))
-          }
+          return JSON.parse(JSON.stringify(this.getData({ key: dataKey })))
+        } else {
+          // go with default
+          return dfltData
         }
-      } else {
-        // go with default
-        console.log(
-          'JSON.parse(JSON.stringify(this.getData(this.chartTypeId)))',
-          JSON.parse(JSON.stringify(this.getData(this.chartTypeId))))
-        return JSON.parse(JSON.stringify(this.getData(this.chartTypeId)))
       }
     }
   }

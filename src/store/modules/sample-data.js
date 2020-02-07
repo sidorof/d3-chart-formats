@@ -33,9 +33,9 @@ const actions = {
     const key = payload.key
     const numColumns = payload.numColumns
     const length = payload.length
-    let curDate = new Date()
+    const curDate = new Date()
 
-    let ts = new TS()
+    const ts = new TS()
     ts.key = key
     ts.frequency = 'd'
     for (let i = 0; i < numColumns; i++) {
@@ -91,21 +91,21 @@ const actions = {
       ? 1
       : payload.factor
 
-    let data = {}
+    const data = {}
     data.key = key
     data.columns = []
     for (let i = 0; i < numColumns; i++) {
       data.columns.push('Variable ' + (i + 1))
     }
 
-    let allValues = []
+    const allValues = []
 
     // create the timeseries, string date is key
     for (let i = 0; i < length; i++) {
-      let values = new Array(numColumns)
+      const values = new Array(numColumns)
 
       for (let j = 0; j < numColumns; j++) {
-        let value = onlyPositive
+        const value = onlyPositive
           ? Math.random()
           : Math.random() - 0.5
         values[j] = value * factor

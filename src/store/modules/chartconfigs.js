@@ -5,7 +5,7 @@
  * dfltConfig is a key/value in configs for the default theme
  * configs enables multiple charts to be maintained
  * with whatever settings are necessary. They are keyed by
- * either 'default' or the modId.
+ * either 'dflt' or the modId.
  *
  * In addition, store is the primary communication point for all
  * charts, eliminating parameters send via props to subcomponents.

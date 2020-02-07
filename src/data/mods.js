@@ -30,9 +30,14 @@
       ts_long
  */
 const mods = {
-  'default': { desc: 'default value for standard graphs', mods: [] },
+  dflt: {
+    desc: 'default value for standard graphs',
+    sampleData: {},
+    mods: []
+  },
   'dark 1': {
     desc: 'dark background version 1',
+    sampleData: {},
     colors: {},
     mods: [
       { path: 'name', value: 'dark' },
@@ -56,6 +61,7 @@ const mods = {
 
   'dark 2': {
     desc: 'dark background version 2',
+    sampleData: {},
     colors: {},
     mods: [
       { path: 'name', value: 'dark' },
@@ -79,6 +85,7 @@ const mods = {
 
   'dark 3': {
     desc: 'dark background version 3',
+    sampleData: {},
     colors: {},
     mods: [
       { path: 'name', value: 'dark' },
@@ -102,6 +109,7 @@ const mods = {
 
   'blue 1': {
     desc: 'dark blue background version 1',
+    sampleData: {},
     colors: {},
     mods: [
       { path: 'name', value: 'green 1' },
@@ -125,6 +133,7 @@ const mods = {
 
   'blue 2': {
     desc: 'dark blue background version 2',
+    sampleData: {},
     colors: {
       background: '#121c43',
       panel: '#004c87',
@@ -149,6 +158,7 @@ const mods = {
 
   'material design 1': {
     desc: 'using Material Design palette',
+    sampleData: {},
     colors: {},
     mods: [
       { path: 'name', value: 'blue 2' },
@@ -173,6 +183,7 @@ const mods = {
 
   'material design 2': {
     desc: 'using Material Design palette',
+    sampleData: {},
     colors: {
       primary: '#2196F3',
       secondary: '#1976D2',
@@ -263,8 +274,28 @@ const mods = {
     ]
   },
 
+  'simplified 1a': {
+    desc: 'stripping out detail, big lines',
+    colors: {},
+    sampleData: {
+      'date-line-plot': 'ts3'
+    },
+    mods: [
+      { path: 'name', value: 'blue 2' },
+      { path: 'panel.coords.left', value: 1 },
+      { path: 'panel.coords.right', value: 0 },
+      { path: 'axes.yAxis.label.text', value: '' },
+      { path: 'axes.xAxis.label.text', value: 'none' },
+      { path: 'axes.xAxis.show', value: false },
+      { path: 'axes.yAxis.show', value: false },
+      { path: 'data.path.strokeWidth', value: 15.0 },
+      { path: 'data.path.opacity', value: 0.50 },
+      { path: 'data.path.dots.useDots', value: false }
+    ]
+  },
+
   'simplified 2': {
-    desc: 'stripping out detail, large hollow dots',
+    desc: 'stripping out detail, large hollow dots, no reason',
     colors: {},
     sampleData: {
       'date-line-plot': 'ts3',
@@ -309,8 +340,9 @@ const mods = {
     ]
   },
 
-  'generic': {
+  generic: {
     desc: 'mostly white',
+    sampleData: {},
     colors: {},
     mods: [
       { path: 'name', value: 'plain' },
