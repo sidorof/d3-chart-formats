@@ -1,40 +1,46 @@
 <template>
-  <v-card>
-    <layout1 :params="params"/>
-  </v-card>
+  <v-container fluid>
+    <v-card>
+      <scaling-view/>
+    </v-card>
+  </v-container>
 </template>
 
 <script>
 import { mapGetters, mapActions } from 'vuex'
 
-import Layout1 from './Layout1'
+import Scaling from './Scaling'
 
 export default {
+  // think about removing this component completely
+  // what purpose does it really serve?
   components: {
-    layout1: Layout1
+    'scaling-view': Scaling
   },
   data: () => ({
-    id: 'test',
-    layoutNum: '1',
-    valid: true,
+    id: 'scale-test',
     numColumns: 3,
-    length: 200,
-    params: null
+    length: 200
   }),
-  mounted: function () {
+  created: function () {
     this.createTimeseries({ key: 'ts1', numColumns: 3, length: 200 })
-    this.params = this.getDefaultConfig
+    const configId = 'dflt'
+    this.setConfig({ id: configId, ...this.getDefaultConfig })
+    this.setChart({
+      id: this.id, configId: configId, width: null, height: null
+    })
   },
   computed: {
     ...mapGetters({
       getConfig: 'chart/getConfig',
       getDefaultConfig: 'chart/getDefaultConfig',
-      getTs: 'sample/getTs'
+      getData: 'sample/getData'
     })
   },
   methods: {
     ...mapActions({
       setConfig: 'chart/setConfig',
+      setChart: 'chart/setChart',
       createTimeseries: 'sample/createTimeseries'
     })
   }

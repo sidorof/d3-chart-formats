@@ -1,51 +1,75 @@
 <template>
   <v-row justify="center">
-    <v-dialog v-model="dialog" scrollable max-width="300px">
-      <template v-slot:activator="{ on }">
-        <v-btn color="primary" dark v-on="on">Open Dialog</v-btn>
-      </template>
-      <v-card>
-        <v-card-title>Modification Transactions</v-card-title>
-        <v-divider></v-divider>
-        <v-card-text style="height: 300px;">
-          <v-radio-group v-model="dialogm1" column>
-            <v-radio label="Bahamas, The" value="bahamas"></v-radio>
-            <v-radio label="Bahrain" value="bahrain"></v-radio>
-            <v-radio label="Bangladesh" value="bangladesh"></v-radio>
-            <v-radio label="Barbados" value="barbados"></v-radio>
-            <v-radio label="Belarus" value="belarus"></v-radio>
-            <v-radio label="Belgium" value="belgium"></v-radio>
-            <v-radio label="Belize" value="belize"></v-radio>
-            <v-radio label="Benin" value="benin"></v-radio>
-            <v-radio label="Bhutan" value="bhutan"></v-radio>
-            <v-radio label="Bolivia" value="bolivia"></v-radio>
-            <v-radio label="Bosnia and Herzegovina" value="bosnia"></v-radio>
-            <v-radio label="Botswana" value="botswana"></v-radio>
-            <v-radio label="Brazil" value="brazil"></v-radio>
-            <v-radio label="Brunei" value="brunei"></v-radio>
-            <v-radio label="Bulgaria" value="bulgaria"></v-radio>
-            <v-radio label="Burkina Faso" value="burkina"></v-radio>
-            <v-radio label="Burma" value="burma"></v-radio>
-            <v-radio label="Burundi" value="burundi"></v-radio>
-          </v-radio-group>
-        </v-card-text>
-        <v-divider></v-divider>
-        <v-card-actions>
-          <v-btn color="blue darken-1" text @click="dialog = false">Close</v-btn>
-          <v-btn color="blue darken-1" text @click="dialog = false">Save</v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
-  </v-row>
+    <v-card color="#555" class="ml-2 pl-3">
+      <v-card-title class="title" >Modifications to Tree</v-card-title>
+      <div>{{ getMod({ id: modId }).desc }}</div>
+      <div v-if="hasColors">
+        <div class="pl-3">color labels</div>
+        <v-col >
+        <v-card
+          color="#aaa" class="mb-3 mr-4 px-5 black--text"
+          v-for="(color, j) in Object.keys(currentMod.colors)"
+          :key="j"
+        >
+          <div> {{ color }}: {{ getColor(currentMod.colors, color)}}</div>
+
+          <v-icon large :color="getColor(currentMod.colors, color)"> mdi-card </v-icon>
+        </v-card>
+        </v-col>
+      </div>
+      <div
+        v-for="(mod, n) in getMod({ id: modId }).mods"
+        :key=n
+      >
+        <v-col >
+          <v-card color="#aaa" class="mr-4 px-5 black--text" >
+            <div class="body-2">/{{mod.path}}</div>
+            <div >value: {{ mod.value }}</div>
+            <v-icon v-if="asColor(mod.value)" :color="asColor(mod.value)">
+              mdi-card
+            </v-icon>
+          </v-card>
+        </v-col>
+      </div>
+    </v-card>
+</v-row>
 </template>
 
 <script>
-  export default {
-    data () {
-      return {
-        dialogm1: '',
-        dialog: false,
+import { mapGetters } from 'vuex'
+
+export default {
+  props: ['currentMod', 'modId'],
+  computed: {
+    ...mapGetters({
+      getMods: 'chart/getMods',
+      getMod: 'chart/getMod'
+    }),
+    hasColors () {
+      if (this.currentMod.colors !== undefined) {
+        if (Object.keys(this.currentMod.colors).length > 0) {
+          return true
+        }
       }
+      return false
     },
+    getModIds () {
+      return Object.keys(this.getMods)
+    }
+  },
+  methods: {
+    getColor (colorObj, color) {
+      return colorObj[color]
+    },
+    asColor (value) {
+      // doesn't check for color words, only hex
+      const strValue = value.toString()
+      if (strValue.startsWith('#')) {
+        return strValue
+      } else {
+        return false
+      }
+    }
   }
+}
 </script>

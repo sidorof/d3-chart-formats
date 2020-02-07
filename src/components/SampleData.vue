@@ -2,7 +2,7 @@
   <v-row justify="center">
     <v-btn
       color="primary"
-      light
+      class="black--text"
       @click.stop="dialogData = true"
     >
       Update Data
@@ -11,7 +11,6 @@
     <v-dialog
       v-model="dialogData"
       max-width="430"
-
     >
       <v-card class="mx-auto" height="250">
         <v-form class="pa-10" v-model="valid">
@@ -22,6 +21,7 @@
               min="1"
               max="30"
               thumb-label
+              thumb-color="#232d6c"
             >
               <template v-slot:append>
                 <v-text-field
@@ -40,6 +40,7 @@
               thumb-label
               min="5"
               max="3000"
+              thumb-color="#232d6c"
             >
               <template v-slot:append>
                 <v-text-field
@@ -69,7 +70,7 @@
 import { mapActions } from 'vuex'
 
 export default {
-  props: ['dialog'],
+  props: ['dialog', 'dataKey'],
   data () {
     return {
       dialogData: false,
@@ -90,8 +91,8 @@ export default {
       createTimeseries: 'sample/createTimeseries'
     }),
     recalcTs (numColumns, length) {
-      this.createTimeseries({
-        key: 'ts1', numColumns: numColumns, length: length })
+      this.createTimeseries(
+        { key: this.dataKey, numColumns: numColumns, length: length })
     },
     newData (numColumns, length) {
       // prep for various plot types switch

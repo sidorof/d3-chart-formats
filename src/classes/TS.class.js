@@ -255,7 +255,7 @@ export class TS {
           for (var colNbr = 0; colNbr < ts.columns.length; colNbr++) {
             baseTs.data[date].push(pad)
           }
-          // something peculiar here. ts.data is becoming modified
+          // NOTE: something peculiar here. ts.data is becoming modified
           // console.log(
           //   '_combineTs: completed padding date', date, baseTs.data[date])
           // console.log(
