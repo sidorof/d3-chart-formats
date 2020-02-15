@@ -28,15 +28,6 @@ export default {
     ChartClass: null
   }),
   mounted: function () {
-    if (this.chartId !== undefined && this.chartId !== null) {
-      let chart = this.getChart({ id: this.chartId })
-      if (chart !== undefined) {
-        chart = JSON.parse(JSON.stringify(chart))
-        this.ChartClass = this.getChartType({ id: chart.chartTypeId })
-          .ChartClass
-        this.drawChart()
-      }
-    }
     window.addEventListener('resize', this.handleWindowResize)
   },
   watch: {

@@ -18,6 +18,7 @@ import Vuex from 'vuex'
 
 import defaultTheme from '@/data/templates/default'
 import { D3DateLinePlot } from '@/classes/D3/D3DateLinePlot'
+// import { D3Plot } from '@/classes/D3/D3Plot'
 
 import mods from '@/data/mods'
 
@@ -41,13 +42,27 @@ const state = {
 
   chartTypes: {
     'date-line-plot': {
+      desc: 'A chart of time series data with dates on the x axis',
       // decide what to do about key
       sampleParams: { key: 'ts1', numColumns: 3, length: 200 },
       ChartClass: D3DateLinePlot
+      // },
+      // 'bar-plot': {
+      //   desc: 'A bar chart',
+      //   sampleParams: { key: 'labeled1', numColumns: 7, length: 1 },
+      //   ChartClass: D3Plot
+      // },
+      // 'pie-plot': {
+      //   desc: 'A pie plot',
+      //   sampleParams: { key: 'labeled1', numColumns: 7, length: 1 },
+      //   ChartClass: D3Plot
     }
   },
 
   mods: { ...mods },
+
+  // mod that is to be applied to all charts in ChartView
+  currentMod: mods.dflt,
 
   frequencies: [
     { ptype: 'd', text: 'Daily' },
@@ -70,6 +85,10 @@ const mutations = {
   setConfig (state, payload) {
     // put it to a specific id
     Vue.set(state.configs, payload.id, payload)
+  },
+
+  clearCharts (state, payload) {
+    Vue.set(state, 'charts', payload)
   },
 
   setChart (state, payload) {
@@ -134,6 +153,9 @@ const mutations = {
   setMod (state, payload) {
     Vue.set(state.mods, payload.id, payload)
   },
+  setCurrentMod (state, payload) {
+    Vue.set(state, 'currentMod', payload)
+  },
   setColor (state, payload) {
     Vue.set(state.colorPicker, payload)
   },
@@ -155,6 +177,9 @@ const mutations = {
 const actions = {
   setConfig ({ commit }, payload) {
     commit('setConfig', payload)
+  },
+  clearCharts ({ commit }) {
+    commit('clearCharts', {})
   },
   setChart ({ commit }, payload) {
     commit('setChart', payload)
@@ -187,6 +212,9 @@ const actions = {
   },
   setMod ({ commit }, payload) {
     commit('setMod', payload)
+  },
+  setCurrentMod ({ commit }, payload) {
+    commit('setCurrentMod', payload)
   }
 }
 
@@ -203,6 +231,9 @@ const getters = {
   },
   getDefaultConfig (state) {
     return state.defaults.config
+  },
+  getCharts (state) {
+    return state.charts
   },
   getChart: (state) => (payload) => {
     return state.charts[payload.id]
@@ -221,6 +252,9 @@ const getters = {
   },
   getMods (state) {
     return state.mods
+  },
+  getCurrentMod (state) {
+    return state.currentMod
   },
   frequencies (state) {
     return state.frequencies
