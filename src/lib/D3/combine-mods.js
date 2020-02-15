@@ -1,7 +1,7 @@
 // combine-mods.js
 // moved to layout1.vue
 export const combineMods = (dfltConfig, mods) => {
-  // this may not be the best place for it.
+  // NOTE: this needs to be updated to current, then actually used
   var params = { ...dfltConfig }
 
   mods.forEach((mod) => {

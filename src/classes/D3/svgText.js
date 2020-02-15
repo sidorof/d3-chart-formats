@@ -12,8 +12,15 @@ export const svgText = (svg, textObj, scaleBasis) => {
     .attr('class', textObj.className)
     .attr('x', textObj.x)
     .attr('y', textObj.y)
-    // .attr('dominant-basetextObj', 'middle')
+    .attr('dominant-baseline', textObj['dominant-baseline'] === undefined
+      ? 'none'
+      : textObj['dominant-baseline']
+    )
     .attr('text-anchor', 'middle')
+    .attr('text-anchor', textObj['text-anchor'] === undefined
+      ? 'middle'
+      : textObj['text-anchor']
+    )
     .text(textObj.text)
 
   applyStyles(text, textObj.styles, scaleBasis)

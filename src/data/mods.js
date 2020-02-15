@@ -232,6 +232,7 @@ const mods = {
       { path: 'name', value: 'blue 2' },
       { path: 'styles.background', value: '#FFF' },
       // { path: 'panel.styles.fill', value: '{primary}' },
+      { path: 'axes.yAxis.scaleFactor', value: 0.005 },
       { path: 'panel.topPanel.styles.fill', value: '{secondary}' },
       { path: 'panel.rightPanel.styles.fill', value: '#ededed' },
       { path: 'panel.leftPanel.styles.fill', value: '#ededed' },
@@ -265,6 +266,7 @@ const mods = {
       { path: 'name', value: 'blue 2' },
       { path: 'panel.coords.left', value: 1 },
       { path: 'panel.coords.right', value: 0 },
+      { path: 'axes.yAxis.scaleFactor', value: 0.005 },
       { path: 'axes.yAxis.label.text', value: '' },
       { path: 'axes.xAxis.label.text', value: 'none' },
       { path: 'axes.xAxis.show', value: false },
@@ -275,22 +277,75 @@ const mods = {
   },
 
   'simplified 1a': {
-    desc: 'stripping out detail, big lines',
+    desc: 'stripping out detail, thick lines',
     colors: {},
     sampleData: {
-      'date-line-plot': 'ts3'
+      'date-line-plot': 'ts4'
     },
     mods: [
       { path: 'name', value: 'blue 2' },
+      {
+        path: 'titles.2',
+        value: {
+          text: 'stripping out detail, thick lines',
+          y: '75%',
+          x: '10',
+          'text-anchor': 'left'
+        }
+      },
       { path: 'panel.coords.left', value: 1 },
       { path: 'panel.coords.right', value: 0 },
+      { path: 'axes.yAxis.scaleFactor', value: 0.005 },
       { path: 'axes.yAxis.label.text', value: '' },
       { path: 'axes.xAxis.label.text', value: 'none' },
       { path: 'axes.xAxis.show', value: false },
       { path: 'axes.yAxis.show', value: false },
       { path: 'data.path.strokeWidth', value: 15.0 },
       { path: 'data.path.opacity', value: 0.50 },
-      { path: 'data.path.dots.useDots', value: false }
+      { path: 'data.path.dots.useDots', value: true },
+      { path: 'data.path.dots.useStroke', value: true },
+      { path: 'data.path.dots.useFill', value: true },
+      { path: 'data.path.dots.radius', value: 14 }
+    ]
+  },
+
+  'simplified 1b': {
+    desc: 'showing title placement control',
+    colors: {},
+    sampleData: {
+      'date-line-plot': 'ts4'
+    },
+    mods: [
+      { path: 'name', value: 'blue 2' },
+      { path: 'titles.1.text', value: 'Left Main Title' },
+      { path: 'titles.1.x', value: '15' },
+      { path: 'titles.1.y', value: '42%' },
+      { path: 'titles.1.text-anchor', value: 'left' },
+      { path: 'titles.2.text', value: 'right secondary title' },
+      { path: 'titles.2.x', value: '85%' },
+      { path: 'titles.2.y', value: '30%' },
+      { path: 'titles.2.text-anchor', value: 'middle' },
+      { path: 'titles.3', value: {} },
+      { path: 'titles.3.text', value: 'something in the middle' },
+      { path: 'titles.3.x', value: '50%' },
+      { path: 'titles.3.y', value: '75%' },
+      { path: 'titles.3.styles', value: {} },
+      { path: 'titles.3.styles.fontSize', value: 14 },
+      { path: 'titles.3.styles.fill', value: '#222' },
+
+      { path: 'panel.coords.left', value: 1 },
+      { path: 'panel.coords.right', value: 0 },
+      { path: 'axes.yAxis.scaleFactor', value: 0.005 },
+      { path: 'axes.yAxis.label.text', value: '' },
+      { path: 'axes.xAxis.label.text', value: 'none' },
+      { path: 'axes.xAxis.show', value: false },
+      { path: 'axes.yAxis.show', value: false },
+      { path: 'data.path.strokeWidth', value: 15.0 },
+      { path: 'data.path.opacity', value: 0.50 },
+      { path: 'data.path.dots.useDots', value: true },
+      { path: 'data.path.dots.useStroke', value: true },
+      { path: 'data.path.dots.useFill', value: true },
+      { path: 'data.path.dots.radius', value: 14 }
     ]
   },
 
@@ -304,6 +359,7 @@ const mods = {
     mods: [
       { path: 'name', value: 'blue 2' },
       // { path: 'axes.xAxis.show', value: false },
+      { path: 'axes.yAxis.scaleFactor', value: 0.005 },
       { path: 'axes.yAxis.label.text', value: '' },
       { path: 'axes.xAxis.label.text', value: 'none' },
       { path: 'axes.xAxis.show', value: false },
@@ -325,7 +381,7 @@ const mods = {
     },
     mods: [
       { path: 'name', value: 'blue 2' },
-      { path: 'axes.xAxis.scaleFactor', value: 0.1 },
+      { path: 'axes.yAxis.scaleFactor', value: 0.005 },
       { path: 'axes.yAxis.label.text', value: '' },
       { path: 'axes.xAxis.label.text', value: 'none' },
       { path: 'axes.xAxis.show', value: false },

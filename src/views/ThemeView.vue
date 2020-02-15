@@ -1,6 +1,9 @@
 <template>
   <v-container fluid class="mt-5 ml-5 justify-content-center d-flex align-items-center">
     <v-row>
+      <v-card>
+        Each graph uses the same code with modification transactions applied to the theme object.
+      </v-card>
       <v-col cols="12" v-if="getMods !== undefined">
         <v-row
           align="center"
@@ -8,7 +11,7 @@
         >
         <v-card
           justify-center
-          :height=startHeight
+          :height="startHeight"
           color="grey"
           flat
           tile
@@ -67,6 +70,8 @@ export default {
     chartTypeId: 'date-line-plot'
   }),
   mounted: function () {
+    // create the charts with the default chart type
+    // id in this case is modId
     const config = JSON.parse(
       JSON.stringify(this.getDefaultConfig))
     for (const modId in this.getMods) {

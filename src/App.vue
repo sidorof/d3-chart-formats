@@ -18,7 +18,7 @@
           <v-card flat>
             <theme-view v-if="tab === 0"/>
             <scaling-app v-if="tab === 1"/>
-            <div v-if="tab === 2">Not yet implemented</div>
+            <chart-view v-if="tab === 2">Not yet implemented</chart-view>
           </v-card>
         </v-tab-item>
       </v-tabs-items>
@@ -30,15 +30,17 @@
 import { mapGetters, mapActions } from 'vuex'
 import Scaling from './views/Scaling'
 import ThemeView from './views/ThemeView'
+import ChartView from './views/ChartView'
 
 export default {
   name: 'App',
   components: {
     'scaling-app': Scaling,
-    'theme-view': ThemeView
+    'theme-view': ThemeView,
+    'chart-view': ChartView
   },
   data: () => ({
-    tab: 0,
+    tab: 2,
     items: [
       'Explore Themes', 'Explore Scaling', 'Explore Chart Types'
     ]
@@ -46,6 +48,7 @@ export default {
   created () {
     const config = JSON.parse(JSON.stringify(this.getDefaultConfig))
     this.setConfig({ id: 'default', ...config })
+    this.setCurrentMod(this.getMod({ id: 'dflt' }))
     this.createSampleData()
   },
   watch: {
@@ -55,12 +58,14 @@ export default {
   },
   computed: {
     ...mapGetters({
-      getDefaultConfig: 'chart/getDefaultConfig'
+      getDefaultConfig: 'chart/getDefaultConfig',
+      getMod: 'chart/getMod'
     })
   },
   methods: {
     ...mapActions({
       setConfig: 'chart/setConfig',
+      setCurrentMod: 'chart/setCurrentMod',
       setRefreshChart: 'chart/setRefreshChart',
       createTimeseries: 'sample/createTimeseries',
       createLabeledData: 'sample/createLabeledData'
@@ -75,6 +80,7 @@ export default {
       // timeseries short
       this.createTimeseries({ key: 'ts2', numColumns: 3, length: 15 })
       this.createTimeseries({ key: 'ts3', numColumns: 5, length: 6 })
+      this.createTimeseries({ key: 'ts4', numColumns: 1, length: 6 })
 
       // error bars - just use numColumns as a multple of 3
       // timeseries long
