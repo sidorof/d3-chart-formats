@@ -82,7 +82,6 @@ const actions = {
      *    ]
      * }
      */
-
     const key = payload.key
     const numColumns = payload.numColumns
     const length = payload.length

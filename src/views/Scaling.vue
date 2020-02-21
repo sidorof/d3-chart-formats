@@ -7,7 +7,13 @@
         align="center"
         justify="center"
       >
-        <sample-data class="mb-10" :dialog='dialog' :dataKey="chartTypeId"/>
+        <sample-data
+          class="mb-10"
+          :dialog='dialog'
+          :dataKey="chartId"
+          :chartTypeId="chartTypeId"
+          :dataConstraints="dataConstraints"
+        />
         <div>
         <v-card
           tile
@@ -200,6 +206,12 @@ export default {
         this.chartTypeId = newData
         this.refreshChart()
       }
+    },
+    dialog: function (newData) {
+      this.refreshChart()
+    },
+    refresh: function (newData) {
+      this.refreshChart()
     }
   },
   computed: {
@@ -211,6 +223,7 @@ export default {
       getChart: 'chart/getChart',
       getChartType: 'chart/getChartType',
       getCurrentChartType: 'chart/getCurrentChartType',
+      getRefreshChart: 'chart/getRefreshChart',
 
       getMods: 'chart/getMods',
       getMod: 'chart/getMod',
@@ -258,6 +271,9 @@ export default {
         }
       }
     },
+    refresh () {
+      return this.getRefreshChart({ id: this.chartId })
+    },
 
     calcHeight () {
       return (this.svgHeightMax - this.svgHeight).toString()
@@ -269,19 +285,26 @@ export default {
       return this.getModIds.length
     },
     getSampleData () {
+      // if specific to the mod, gets the mod data, chartTypeId
+      // otherwise gets the data based on the chartTypeId
       const modObj = JSON.parse(
         JSON.stringify(
           this.getMod({ id: this.modId })
         )
       )
-      const dfltData = this.getData({ key: this.chartTypeId })
       if (modObj !== undefined && modObj !== null) {
         if (modObj.sampleData[this.chartTypeId] !== undefined) {
-          const chartTypeId = modObj.sampleData[this.chartTypeId]
-          return JSON.parse(JSON.stringify(this.getData({ key: chartTypeId })))
+          const dataKey = modObj.sampleData[this.chartTypeId]
+          return JSON.parse(
+            JSON.stringify(
+              this.getData({ key: dataKey })
+            )
+          )
         } else {
           // go with default
-          return dfltData
+          return JSON.parse(
+            JSON.stringify(
+              this.getData({ key: this.chartTypeId })))
         }
       } else {
         return undefined
@@ -289,6 +312,9 @@ export default {
     },
     currentMod () {
       return this.getMod({ id: JSON.parse(JSON.stringify(this.modId)) })
+    },
+    dataConstraints () {
+      return this.getChartType({ id: this.chartTypeId }).dataConstraints
     }
   },
 

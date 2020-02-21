@@ -20,7 +20,7 @@
           <v-container>
             <v-slider
               v-model="numColumns"
-              label="Number of Columns"
+              label="Columns"
               min="1"
               max="30"
               thumb-label
@@ -38,8 +38,9 @@
               </template>
             </v-slider>
             <v-slider
+              v-if="chartTypeId !== 'pie-plot'"
               v-model="length"
-              label="Time Series Periods"
+              :label="rowsLabel"
               thumb-label
               min="5"
               max="3000"
@@ -73,7 +74,12 @@
 import { mapActions } from 'vuex'
 
 export default {
-  props: ['dialog', 'dataKey'],
+  props: {
+    dialog: Boolean,
+    dataKey: String,
+    chartTypeId: String,
+    dataConstraints: Object
+  },
   data () {
     return {
       dialogData: false,
@@ -89,17 +95,58 @@ export default {
       }
     }
   },
+  computed: {
+    rowsLabel () {
+      if (this.chartTypeId.substr(0, 4) === 'data') {
+        return 'Time series periods'
+      } else {
+        return 'Rows'
+      }
+    }
+  },
   methods: {
     ...mapActions({
-      createTimeseries: 'sample/createTimeseries'
+      setRefreshChart: 'chart/setRefreshChart',
+
+      createTimeseries: 'sample/createTimeseries',
+      createLabeledData: 'sample/createLabeledData'
     }),
     recalcTs (numColumns, length) {
       this.createTimeseries(
-        { key: this.dataKey, numColumns: numColumns, length: length })
+        {
+          key: this.chartTypeId,
+          numColumns: numColumns,
+          length: length,
+          ...this.dataConstraints
+        }
+      )
     },
-    newData (numColumns, length) {
-      // prep for various plot types switch
-      this.recalcTs(this.numColumns, this.length)
+    recalcLabeledData (numColumns, length) {
+      this.createLabeledData(
+        {
+          key: this.chartTypeId,
+          numColumns: numColumns,
+          length: length,
+          ...this.dataConstraints
+        }
+      )
+    },
+    newData () {
+      switch (this.chartTypeId) {
+        case 'date-line-plot':
+          this.recalcTs(this.numColumns, this.length)
+          break
+        case 'date-bar-plot':
+          this.recalcTs(this.numColumns, this.length)
+          break
+        case 'line-plot':
+          this.recalcLabeledData(this.numColumns, this.length)
+          break
+        case 'pie-plot':
+          this.recalcLabeledData(this.numColumns, 1)
+          break
+      }
+      this.setRefreshChart({ id: this.dataKey, value: true })
       this.dialogData = false
     }
   }

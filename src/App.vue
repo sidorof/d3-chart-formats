@@ -40,7 +40,7 @@ export default {
     'scaling-app': Scaling
   },
   data: () => ({
-    tab: 0,
+    tab: 2,
     items: [
       'Explore Themes', 'Explore Chart Types', 'Explore Scaling'
     ]

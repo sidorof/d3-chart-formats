@@ -17,6 +17,7 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 
 import defaultTheme from '@/data/templates/default'
+// import { D3LinePlot } from '@/classes/D3/D3LinePlot'
 import { D3DateLinePlot } from '@/classes/D3/D3DateLinePlot'
 import { D3PiePlot } from '@/classes/D3/D3PiePlot'
 
@@ -41,11 +42,19 @@ const state = {
   chartTypes: {
     'date-line-plot': {
       id: 'date-line-plot',
-      desc: 'A chart of time series data',
+      desc: 'A plot of time series data',
       // decide what to do about key
       sampleParams: { key: 'ts1', numColumns: 3, length: 200 },
-      ChartClass: D3DateLinePlot
+      ChartClass: D3DateLinePlot,
+      dataConstraints: {}
     },
+    // 'line-plot': {
+    //   id: 'line-plot',
+    //   desc: 'A plot of data in two dimensions',
+    //   sampleParams: { key: 'labeled1', numColumns: 3, length: 200 },
+    //   ChartClass: D3LinePlot,
+    //   dataConstraints: {}
+    // },
     //   'bar-plot': {
     //     id: 'bar-plot',
     //     desc: 'A bar chart',
@@ -56,7 +65,10 @@ const state = {
       id: 'pie-plot',
       desc: 'A pie plot',
       sampleParams: { key: 'labeled1', numColumns: 7, length: 1 },
-      ChartClass: D3PiePlot
+      ChartClass: D3PiePlot,
+      dataConstraints: {
+        onlyPositive: true
+      }
     }
   },
 
@@ -171,11 +183,12 @@ const mutations = {
   },
   setRefreshChart (state, payload) {
     // delete worked better for watch functions
-    if (payload.chartId !== undefined) {
+    if (payload.id !== undefined) {
+      payload = JSON.parse(JSON.stringify(payload))
       if (payload.value === true) {
-        Vue.set(state.refreshCharts, payload.chartId, payload.value)
+        Vue.set(state.refreshCharts, payload.id, payload.value)
       } else {
-        delete state.refreshCharts[payload.chartId]
+        delete state.refreshCharts[payload.id]
       }
     }
   }
@@ -187,11 +200,11 @@ const actions = {
   },
   setChart ({ commit }, payload) {
     commit('setChart', payload)
-    commit('setRefreshChart', { chartId: payload.id, value: true })
+    commit('setRefreshChart', { id: payload.id, value: true })
   },
   setDims ({ commit }, payload) {
     commit('setDims', payload)
-    commit('setRefreshChart', { chartId: payload.id, value: true })
+    commit('setRefreshChart', { id: payload.id, value: true })
   },
   setChartType ({ state, commit }, payload) {
     // sets the chart type of a particular chart
