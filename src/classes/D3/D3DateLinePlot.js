@@ -1,7 +1,7 @@
 // classes/D3/D3DateLinePlot.js
 /* D3DateLinePlot
  *
- * This class builds on D3Plot, adding
+ * This class builds on D3LinePlot, adding
  *  axes
  *  time series lines
  *  legend

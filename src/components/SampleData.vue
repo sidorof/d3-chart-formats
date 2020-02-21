@@ -12,7 +12,10 @@
       v-model="dialogData"
       max-width="430"
     >
-      <v-card class="mx-auto" height="250">
+      <v-card class="mx-auto" color="#333" outline height="350">'
+        <v-card-title>
+            Create New Sample Data
+        </v-card-title>
         <v-form class="pa-10" v-model="valid">
           <v-container>
             <v-slider

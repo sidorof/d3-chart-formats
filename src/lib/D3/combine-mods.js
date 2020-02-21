@@ -1,20 +1,25 @@
 // combine-mods.js
-// moved to layout1.vue
-export const combineMods = (dfltConfig, mods) => {
-  // NOTE: this needs to be updated to current, then actually used
-  var params = { ...dfltConfig }
-
+export const combineMods = (config, modObj) => {
+  var params = JSON.parse(JSON.stringify(config))
+  modObj.colors = modObj.colors !== undefined
+    ? modObj.colors
+    : {}
+  const mods = modObj.mods
   mods.forEach((mod) => {
-    mod.map(line => {
-      const branch = line.path.split('.').slice(0, -1)
-      const leaf = line.path.split('.').slice(-1)
+    if (mod.path !== undefined) {
+      const branch = mod.path.split('.').slice(0, -1)
+      const leaf = mod.path.split('.').slice(-1)
       var part = params
       for (var i = 0; i < branch.length; i++) {
         part = part[branch[i]]
-        part[leaf] = line.value
       }
-    })
+      // handle named colors
+      part[leaf] = mod.value.toString().startsWith('{')
+        ? modObj.colors[mod.value.slice(1, -1)]
+        : mod.value
+      if (mod.value.toString().startsWith('{')) {
+      }
+    }
   })
-
   return params
 }

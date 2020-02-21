@@ -11,6 +11,23 @@
 </template>
 
 <script>
+/* Plot
+props received:
+  chartId: the id of the chart as in store.charts[id]
+  svgHeight: height of the svg node created
+  svgWidth: width of the svg node created
+  chartData: the data that is expressed in the chart
+
+  It is expected that the chartId would not change.
+
+  The other props should be reactive.
+
+  NOTE:
+  One ambiguity, the dimensions have two sources of truth
+  at the moment, embedded in the chartObj and passed in as props.
+  This needs to be resolved. Note that dimensions are also
+  modified by changes in windowSizes.
+*/
 import { mapGetters, mapActions } from 'vuex'
 
 export default {
@@ -31,11 +48,15 @@ export default {
     window.addEventListener('resize', this.handleWindowResize)
   },
   watch: {
-    chartId: function (newData) {
-      if (newData !== undefined && this.chartId !== null) {
-        const chart = JSON.parse(
-          JSON.stringify(this.getChart({ id: this.chartId })))
-        this.ChartClass = this.getChartType({ id: chart.chartTypeId })
+    getChartParams: function (newData) {
+      if (newData !== undefined) {
+        this.drawChart()
+      }
+    },
+
+    refreshChartFlag: function (newData) {
+      if (newData !== undefined) {
+        this.ChartClass = this.getChartType({ id: this.chartTypeId })
           .ChartClass
         this.drawChart()
       }
@@ -45,15 +66,6 @@ export default {
     },
     svgWidth: function (newData) {
       this.drawChart()
-    },
-
-    initChart: function (newData) {
-      if (this.chartData !== undefined) {
-        newData = JSON.parse(JSON.stringify(newData))
-        this.ChartClass = this.getChartType({ id: newData.chartTypeId })
-          .ChartClass
-        this.drawChart()
-      }
     }
   },
   beforeDestroy: function () {
@@ -61,23 +73,30 @@ export default {
   },
   computed: {
     ...mapGetters({
-      getConfig: 'chart/getConfig',
       getChart: 'chart/getChart',
       getChartType: 'chart/getChartType',
       getDefaultConfig: 'chart/getDefaultConfig',
-      getRefreshCharts: 'chart/getRefreshCharts'
+      getRefreshCharts: 'chart/getRefreshCharts',
+      getRefreshChart: 'chart/getRefreshChart'
     }),
-    initChart () {
-      return this.getChart({ id: this.chartId })
+    refreshChartFlag () {
+      return this.getRefreshChart({ id: this.chartId })
     },
-    getParams () {
-      const chart = this.getChart({ id: this.chartId })
-      return this.getConfig({ id: chart.configId })
+    chartTypeId: {
+      get () {
+        if (this.$store.state.chart.charts[this.chartId] !== undefined) {
+          return this.$store.state.chart.charts[this.chartId].chartTypeId
+        } else {
+          return null
+        }
+      }
+    },
+    getChartParams () {
+      return this.getChart({ id: this.chartId })
     }
   },
   methods: {
     ...mapActions({
-      setConfig: 'chart/setConfig',
       setChart: 'chart/setChart',
       setDims: 'chart/setDims',
       setRefreshChart: 'chart/setRefreshChart',
@@ -87,7 +106,7 @@ export default {
       const chart = JSON.parse(
         JSON.stringify(this.getChart({ id: this.chartId })))
       this.params = chart.config
-      this.ChartClass = this.getChartType({ id: chart.chartTypeId })
+      this.ChartClass = this.getChartType({ id: this.chartTypeId })
         .ChartClass
       this.currentDisplay = this.displayType(this.windowSizes()[0])
       this.drawChart()
@@ -153,35 +172,35 @@ export default {
       return oldVal !== newVal
     },
     drawChart () {
-      const chart = JSON.parse(
-        JSON.stringify(this.getChart({ id: this.chartId })))
-      if (this.svgWidth !== null && this.svgHeight !== null) {
-        const chartData = JSON.parse(JSON.stringify(this.chartData))
-        var base = this.$d3.select(this.$el)
-        const chartClassName = 'chart ma-0 pa-0'
+      var base = this.$d3.select(this.$el)
+      base.selectAll('*').remove()
+      const chartClassName = 'chart ma-0 pa-0'
 
-        base.selectAll('*').remove()
+      const chart = JSON.parse(
+        JSON.stringify(this.getChartParams))
+
+      if (
+        this.svgWidth !== null &&
+        this.svgHeight !== null &&
+        chart.config !== undefined) {
+        const chartData = JSON.parse(JSON.stringify(this.chartData))
+
         const ChartClass = this.getChartType({ id: chart.chartTypeId })
           .ChartClass
         var plot = new ChartClass(
-          { d3: this.$d3, chartData: chartData, ...chart.config })
+          {
+            d3: this.$d3,
+            chartData: chartData,
+            ...chart.config
+          }
+        )
 
         var svg = plot.createSvg(
           base, chartClassName, this.svgWidth, this.svgHeight)
         plot.buildChart(svg, this.svgHeight, this.svgWidth)
+        this.setRefreshChart({ id: this.chartId, value: false })
       }
     }
   }
 }
 </script>
-
-<style>
-svg {
-
-}
-
-svg .title {
-  font-size: 20px;
-  color: blue;
-}
-</style>

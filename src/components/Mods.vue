@@ -9,6 +9,7 @@
       <v-slide-group
         mandatory
         show-arrows
+        center-active
      >
         <v-slide-item
           v-for="mod in getModList"
@@ -65,7 +66,7 @@ export default {
     }),
     setModType (mod, toggle) {
       toggle()
-      this.setCurrentMod(mod)
+      this.setCurrentMod(mod.id)
     }
   }
 }

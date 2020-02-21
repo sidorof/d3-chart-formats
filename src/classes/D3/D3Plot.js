@@ -74,6 +74,13 @@ export class D3Plot extends D3Base {
       )
     }
 
+    if (this.panel.coordMods !== undefined) {
+      panel.coords.top *= panel.coordMods.top
+      panel.coords.left *= panel.coordMods.left
+      panel.coords.right *= panel.coordMods.right
+      panel.coords.bottom *= panel.coordMods.bottom
+    }
+
     panel.styles = { ...panel1.styles, ...panel.styles }
     panel.className = panel1.className
     this.panel = panel

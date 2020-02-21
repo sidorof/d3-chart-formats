@@ -17,8 +17,8 @@
         >
           <v-card flat>
             <theme-view v-if="tab === 0"/>
-            <scaling-app v-if="tab === 1"/>
-            <chart-view v-if="tab === 2">Not yet implemented</chart-view>
+            <chart-view v-if="tab === 1"/>
+            <scaling-app v-if="tab === 2"/>
           </v-card>
         </v-tab-item>
       </v-tabs-items>
@@ -28,44 +28,37 @@
 
 <script>
 import { mapGetters, mapActions } from 'vuex'
-import Scaling from './views/Scaling'
 import ThemeView from './views/ThemeView'
 import ChartView from './views/ChartView'
+import Scaling from './views/Scaling'
 
 export default {
   name: 'App',
   components: {
-    'scaling-app': Scaling,
     'theme-view': ThemeView,
-    'chart-view': ChartView
+    'chart-view': ChartView,
+    'scaling-app': Scaling
   },
   data: () => ({
     tab: 2,
     items: [
-      'Explore Themes', 'Explore Scaling', 'Explore Chart Types'
+      'Explore Themes', 'Explore Chart Types', 'Explore Scaling'
     ]
   }),
   created () {
-    const config = JSON.parse(JSON.stringify(this.getDefaultConfig))
-    this.setConfig({ id: 'default', ...config })
-    this.setCurrentMod(this.getMod({ id: 'dflt' }))
     this.createSampleData()
-  },
-  watch: {
-    tab: function (newData) {
-      this.setRefreshChart({ id: 'scale-test', value: true })
-    }
   },
   computed: {
     ...mapGetters({
       getDefaultConfig: 'chart/getDefaultConfig',
-      getMod: 'chart/getMod'
+      getMod: 'chart/getMod',
+      getChartType: 'chart/getChartType'
     })
   },
   methods: {
     ...mapActions({
-      setConfig: 'chart/setConfig',
       setCurrentMod: 'chart/setCurrentMod',
+      setCurrentChartType: 'chart/setCurrentChartType',
       setRefreshChart: 'chart/setRefreshChart',
       createTimeseries: 'sample/createTimeseries',
       createLabeledData: 'sample/createLabeledData'
@@ -87,12 +80,14 @@ export default {
       // timeseries short
 
       // x y data
-      this.createLabeledData({ key: 'xy1', numColumns: 7, length: 200 })
-      this.createLabeledData({ key: 'xy2', numColumns: 2, length: 15 })
+      // this.createLabeledData({ key: 'xy1', numColumns: 7, length: 200 })
+      // this.createLabeledData({ key: 'xy2', numColumns: 2, length: 15 })
 
       // pie data
-      this.createLabeledData({ key: 'labeled1', numColumns: 7, length: 1 })
-      this.createLabeledData({ key: 'labeled2', numColumns: 7, length: 1 })
+      this.createLabeledData(
+        { key: 'pie-plot', numColumns: 7, length: 1, onlyPositive: true })
+      // this.createLabeledData({ key: 'labeled1', numColumns: 3, length: 1 })
+      // this.createLabeledData({ key: 'labeled2', numColumns: 25, length: 1 })
 
       // network diagrams
     }

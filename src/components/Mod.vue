@@ -39,11 +39,15 @@
 import { mapGetters } from 'vuex'
 
 export default {
-  props: ['currentMod', 'modId'],
+  props: [
+    'modId'
+  ],
+
   computed: {
     ...mapGetters({
       getMods: 'chart/getMods',
-      getMod: 'chart/getMod'
+      getMod: 'chart/getMod',
+      getCurrentMod: 'chart/getCurrentMod'
     }),
     hasColors () {
       if (this.currentMod.colors !== undefined) {
@@ -55,6 +59,9 @@ export default {
     },
     getModIds () {
       return Object.keys(this.getMods)
+    },
+    currentMod () {
+      return this.getMod({ id: JSON.parse(JSON.stringify(this.modId)) })
     }
   },
   methods: {

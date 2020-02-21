@@ -18,7 +18,7 @@ import Vuex from 'vuex'
 
 import defaultTheme from '@/data/templates/default'
 import { D3DateLinePlot } from '@/classes/D3/D3DateLinePlot'
-// import { D3Plot } from '@/classes/D3/D3Plot'
+import { D3PiePlot } from '@/classes/D3/D3PiePlot'
 
 import mods from '@/data/mods'
 
@@ -30,40 +30,46 @@ const state = {
     config: defaultTheme
   },
 
-  // holds the config for each separate theme
-  configs: {},
-
   // holds the runtime values for each chart
-  // id: height, width, configId
+  // id: height, width, configId (or config?), chartTypeId
   // the id is unique to one location in the app
   charts: {
     'scale-test': {}
   },
 
+  // enumerates the available chart types
   chartTypes: {
     'date-line-plot': {
-      desc: 'A chart of time series data with dates on the x axis',
+      id: 'date-line-plot',
+      desc: 'A chart of time series data',
       // decide what to do about key
       sampleParams: { key: 'ts1', numColumns: 3, length: 200 },
       ChartClass: D3DateLinePlot
-      // },
-      // 'bar-plot': {
-      //   desc: 'A bar chart',
-      //   sampleParams: { key: 'labeled1', numColumns: 7, length: 1 },
-      //   ChartClass: D3Plot
-      // },
-      // 'pie-plot': {
-      //   desc: 'A pie plot',
-      //   sampleParams: { key: 'labeled1', numColumns: 7, length: 1 },
-      //   ChartClass: D3Plot
+    },
+    //   'bar-plot': {
+    //     id: 'bar-plot',
+    //     desc: 'A bar chart',
+    //     sampleParams: { key: 'labeled1', numColumns: 7, length: 1 },
+    //     ChartClass: D3Plot
+    //   },
+    'pie-plot': {
+      id: 'pie-plot',
+      desc: 'A pie plot',
+      sampleParams: { key: 'labeled1', numColumns: 7, length: 1 },
+      ChartClass: D3PiePlot
     }
   },
 
+  // the transactional mods that can be applied
   mods: { ...mods },
 
   // mod that is to be applied to all charts in ChartView
   currentMod: mods.dflt,
 
+  // the chart type for all charts in ThemeView
+  currentChartType: null,
+
+  // will be used in D3DateLinePlot for switch frequencies
   frequencies: [
     { ptype: 'd', text: 'Daily' },
     { ptype: 'w', text: 'Weekly' },
@@ -72,21 +78,19 @@ const state = {
     { ptype: 'y', text: 'Yearly' }
   ],
 
+  // to be used for setting in-program color variaations
+  // not currently used
   colorPicker: {
     colorModal: false,
     type: null,
     color: null
   },
-
+  // a flag where the key represents a chart that should be
+  // refreshed. Upon refresh the key is deleted
   refreshCharts: {}
 }
 
 const mutations = {
-  setConfig (state, payload) {
-    // put it to a specific id
-    Vue.set(state.configs, payload.id, payload)
-  },
-
   clearCharts (state, payload) {
     Vue.set(state, 'charts', payload)
   },
@@ -146,6 +150,9 @@ const mutations = {
       Vue.set(state.charts[chartId].config, { ...params })
     }
   },
+  setCurrentChartType (state, payload) {
+    Vue.set(state, 'currentChartType', payload)
+  },
 
   setMods (state, payload) {
     state.mods = payload
@@ -175,9 +182,6 @@ const mutations = {
 }
 
 const actions = {
-  setConfig ({ commit }, payload) {
-    commit('setConfig', payload)
-  },
   clearCharts ({ commit }) {
     commit('clearCharts', {})
   },
@@ -193,6 +197,9 @@ const actions = {
     // sets the chart type of a particular chart
     // does not modify state.chartTypes
     commit('setChartType', payload)
+  },
+  setCurrentChartType ({ commit }, payload) {
+    commit('setCurrentChartType', payload)
   },
   setColor ({ commit }, payload) {
     commit('setColor', payload)
@@ -219,16 +226,6 @@ const actions = {
 }
 
 const getters = {
-  getConfig: (state) => (payload) => {
-    return state.configs[payload.id]
-  },
-  getConfigIds: (state) => (payload) => {
-    var ids = []
-    for (const config in state.configs) {
-      ids.push(config.chartId)
-    }
-    return ids
-  },
   getDefaultConfig (state) {
     return state.defaults.config
   },
@@ -238,14 +235,14 @@ const getters = {
   getChart: (state) => (payload) => {
     return state.charts[payload.id]
   },
-  getConfigs (state) {
-    return state.configs
-  },
   getChartTypes (state) {
     return state.chartTypes
   },
   getChartType: (state) => (payload) => {
     return state.chartTypes[payload.id]
+  },
+  getCurrentChartType (state) {
+    return state.currentChartType
   },
   getMod: (state) => (payload) => {
     return state.mods[payload.id]
@@ -264,6 +261,9 @@ const getters = {
   },
   getRefreshCharts (state) {
     return state.refreshCharts
+  },
+  getRefreshChart: (state) => (payload) => {
+    return state.refreshCharts[payload.id]
   }
 }
 

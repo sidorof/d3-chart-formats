@@ -152,7 +152,9 @@ const mods = {
       { path: 'axes.grids.horizontal.stroke', value: '{grids}' },
       { path: 'axes.grids.vertical.stroke', value: '{grids}' },
       { path: 'titles.1.styles.fill', value: '#dfdfe1' },
-      { path: 'titles.2.styles.fill', value: '#dfdfe1' }
+      { path: 'titles.2.styles.fill', value: '#dfdfe1' },
+
+      { path: 'pie.labels.styles.fill', value: '{axisText}' }
     ]
   },
 
@@ -177,7 +179,9 @@ const mods = {
       { path: 'axes.grids.vertical.stroke', value: '#121c43' },
       { path: 'titles.1.styles.fill', value: '#8eacbb' },
       { path: 'titles.2.styles.fill', value: '#8eacbb' },
-      { path: 'data.path.strokeWidth', value: 4.0 }
+      { path: 'data.path.strokeWidth', value: 4.0 },
+
+      { path: 'pie.labels.styles.fill', value: '#121c43' }
     ]
   },
 
@@ -212,12 +216,16 @@ const mods = {
       { path: 'axes.grids.vertical.stroke', value: '#ddd' },
       { path: 'titles.1.styles.fill', value: '{textLight}' },
       { path: 'titles.2.styles.fill', value: '{textLight}' },
-      { path: 'data.path.strokeWidth', value: 4.0 }
+      { path: 'data.path.strokeWidth', value: 4.0 },
+
+      // for pie
+      { path: 'pie.labels.styles.fill', value: '{textDark}' },
+      { path: 'pie.labels.styles.fontWeight', value: 400 }
     ]
   },
 
   'material design 3': {
-    desc: 'using Material Design palette with dots',
+    desc: 'using Mat Design palette with dots',
     colors: {
       primary: '#2196F3',
       secondary: '#1976D2',
@@ -228,6 +236,7 @@ const mods = {
     sampleData: {
       'date-line-plot': 'ts3'
     },
+    excluded: ['pie-plot'],
     mods: [
       { path: 'name', value: 'blue 2' },
       { path: 'styles.background', value: '#FFF' },
@@ -252,7 +261,10 @@ const mods = {
       { path: 'titles.2.styles.fill', value: '{textLight}' },
       { path: 'data.path.strokeWidth', value: 2.0 },
       { path: 'data.path.dots.useDots', value: true },
-      { path: 'data.path.dots.radius', value: 3.5 }
+      { path: 'data.path.dots.radius', value: 3.5 },
+      // for pie
+      { path: 'pie.labels.styles.fill', value: '{textDark}' },
+      { path: 'pie.labels.styles.fontWeight', value: 400 }
     ]
   },
 
@@ -266,28 +278,45 @@ const mods = {
       { path: 'name', value: 'blue 2' },
       { path: 'panel.coords.left', value: 1 },
       { path: 'panel.coords.right', value: 0 },
+      {
+        path: 'panel.coordMods',
+        value: {
+          top: 1.0,
+          right: 0.5,
+          left: 0.5,
+          bottom: 0.38
+        }
+      },
+
+      { path: 'panel1.bottom.min', value: 1 },
       { path: 'axes.yAxis.scaleFactor', value: 0.005 },
       { path: 'axes.yAxis.label.text', value: '' },
       { path: 'axes.xAxis.label.text', value: 'none' },
       { path: 'axes.xAxis.show', value: false },
       { path: 'axes.yAxis.show', value: false },
       { path: 'data.path.strokeWidth', value: 4.0 },
-      { path: 'data.path.dots.useDots', value: true }
+      { path: 'data.path.dots.useDots', value: true },
+
+      { path: 'pie.slices.innerRadius', value: 0.0 },
+      { path: 'pie.slices.padAngle', value: 0.0 },
+      { path: 'pie.slices.cornerRadius', value: 10 },
+      { path: 'pie.labels.useLabels', value: false }
     ]
   },
 
   'simplified 1a': {
-    desc: 'stripping out detail, thick lines',
+    desc: 'stripping out detail, thick lines on line charts',
     colors: {},
     sampleData: {
       'date-line-plot': 'ts4'
     },
+
     mods: [
       { path: 'name', value: 'blue 2' },
       {
         path: 'titles.2',
         value: {
-          text: 'stripping out detail, thick lines',
+          text: 'stripping out detail, thick lines on line charts',
           y: '75%',
           x: '10',
           'text-anchor': 'left'
@@ -295,6 +324,16 @@ const mods = {
       },
       { path: 'panel.coords.left', value: 1 },
       { path: 'panel.coords.right', value: 0 },
+      {
+        path: 'panel.coordMods',
+        value: {
+          top: 1.0,
+          right: 0.5,
+          left: 0.5,
+          bottom: 0.38
+        }
+      },
+
       { path: 'axes.yAxis.scaleFactor', value: 0.005 },
       { path: 'axes.yAxis.label.text', value: '' },
       { path: 'axes.xAxis.label.text', value: 'none' },
@@ -305,7 +344,12 @@ const mods = {
       { path: 'data.path.dots.useDots', value: true },
       { path: 'data.path.dots.useStroke', value: true },
       { path: 'data.path.dots.useFill', value: true },
-      { path: 'data.path.dots.radius', value: 14 }
+      { path: 'data.path.dots.radius', value: 14 },
+
+      { path: 'pie.slices.innerRadius', value: 0.0 },
+      { path: 'pie.slices.padAngle', value: 0.02 },
+      { path: 'pie.slices.cornerRadius', value: 10 },
+      { path: 'pie.labels.useLabels', value: false }
     ]
   },
 
@@ -335,6 +379,16 @@ const mods = {
 
       { path: 'panel.coords.left', value: 1 },
       { path: 'panel.coords.right', value: 0 },
+      {
+        path: 'panel.coordMods',
+        value: {
+          top: 1.0,
+          right: 0.5,
+          left: 0.5,
+          bottom: 0.38
+        }
+      },
+
       { path: 'axes.yAxis.scaleFactor', value: 0.005 },
       { path: 'axes.yAxis.label.text', value: '' },
       { path: 'axes.xAxis.label.text', value: 'none' },
@@ -345,20 +399,34 @@ const mods = {
       { path: 'data.path.dots.useDots', value: true },
       { path: 'data.path.dots.useStroke', value: true },
       { path: 'data.path.dots.useFill', value: true },
-      { path: 'data.path.dots.radius', value: 14 }
+      { path: 'data.path.dots.radius', value: 14 },
+
+      { path: 'pie.slices.innerRadius', value: 0.0 },
+      { path: 'pie.slices.padAngle', value: 0.02 },
+      { path: 'pie.slices.cornerRadius', value: 10 },
+      { path: 'pie.labels.useLabels', value: false }
     ]
   },
 
   'simplified 2': {
-    desc: 'stripping out detail, large hollow dots, no reason',
+    desc: 'stripping out detail',
     colors: {},
     sampleData: {
       'date-line-plot': 'ts3',
       'labeled-data-plot': 'labeled1'
     },
     mods: [
-      { path: 'name', value: 'blue 2' },
-      // { path: 'axes.xAxis.show', value: false },
+      { path: 'name', value: 'simplified 2' },
+      {
+        path: 'panel.coordMods',
+        value: {
+          top: 1.0,
+          right: 0.5,
+          left: 0.5,
+          bottom: 0.38
+        }
+      },
+
       { path: 'axes.yAxis.scaleFactor', value: 0.005 },
       { path: 'axes.yAxis.label.text', value: '' },
       { path: 'axes.xAxis.label.text', value: 'none' },
@@ -369,7 +437,12 @@ const mods = {
       { path: 'data.path.dots.useStroke', value: true },
       { path: 'data.path.dots.useFill', value: false },
       { path: 'data.path.dots.strokeWidth', value: 4 },
-      { path: 'data.path.dots.radius', value: 7 }
+      { path: 'data.path.dots.radius', value: 7 },
+
+      { path: 'pie.slices.innerRadius', value: 0.0 },
+      { path: 'pie.slices.padAngle', value: 0.00 },
+      { path: 'pie.slices.cornerRadius', value: 0 },
+      { path: 'pie.labels.useLabels', value: false }
     ]
   },
 
@@ -379,8 +452,19 @@ const mods = {
     sampleData: {
       'date-line-plot': 'ts3'
     },
+    excluded: ['pie-plot'],
     mods: [
-      { path: 'name', value: 'blue 2' },
+      { path: 'name', value: 'simplified 3' },
+      {
+        path: 'panel.coordMods',
+        value: {
+          top: 1.0,
+          right: 0.5,
+          left: 0.5,
+          bottom: 0.38
+        }
+      },
+
       { path: 'axes.yAxis.scaleFactor', value: 0.005 },
       { path: 'axes.yAxis.label.text', value: '' },
       { path: 'axes.xAxis.label.text', value: 'none' },
@@ -392,7 +476,9 @@ const mods = {
       { path: 'data.path.dots.useStroke', value: true },
       { path: 'data.path.dots.useFill', value: true },
       { path: 'data.path.dots.strokeWidth', value: 4 },
-      { path: 'data.path.dots.radius', value: 4 }
+      { path: 'data.path.dots.radius', value: 4 },
+
+      { path: 'pie.labels.useLabels', value: false }
     ]
   },
 
@@ -420,7 +506,10 @@ const mods = {
       { path: 'axes.yRightAxis.label.fill', value: 'black' },
       { path: 'titles.1.styles.fill', value: 'black' },
       { path: 'titles.2.styles.fill', value: 'black' },
-      { path: 'data.path.strokeWidth', value: 4.0 }
+      { path: 'data.path.strokeWidth', value: 4.0 },
+      // for pie
+      { path: 'pie.labels.styles.fill', value: '{textDark}' },
+      { path: 'pie.labels.styles.fontWeight', value: 400 }
     ]
   }
 }

@@ -1,14 +1,16 @@
 import data from './data'
 import axes from './axes'
+import pie from './pie'
 
 class DefaultTheme {
-  constructor ({ axes, data }) {
+  constructor ({ axes, data, pie }) {
     this.name = 'default'
     this.styles = {} // { background: '#000', opacity: 0.5 }
     this.className = 'chart'
 
     this.axes = axes
     this.data = data
+    this.pie = pie
 
     this.panel1 = {
       heightRange: { max: 300, min: 200 },
@@ -86,6 +88,7 @@ class DefaultTheme {
 }
 
 export default new DefaultTheme({
-  data: data,
-  axes: axes
+  data,
+  axes,
+  pie
 })

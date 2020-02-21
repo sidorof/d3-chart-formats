@@ -1,6 +1,9 @@
 <template>
-  <v-container fluid class="mt-5 ml-5 justify-content-center d-flex align-items-center">
+  <v-container fluid class="mt-0 ml-5 justify-content-center d-flex align-items-center">
     <v-row>
+      <chart-types-list
+        class="mt-5"
+      />
       <v-card>
         Each graph uses the same code with modification transactions applied to the theme object.
       </v-card>
@@ -12,11 +15,11 @@
         <v-card
           justify-center
           :height="startHeight"
+          :width="svgWidth + 3"
           color="grey"
           flat
           tile
           outlined
-
           v-for="(modId, i) in getModIds"
           :key="i"
           dark
@@ -33,7 +36,7 @@
               {{getMod({ id: modId }).desc }}
             </v-card-subtitle>
           </span>
-          <isolate
+          <plot-app
             :chartId="modId"
             :chartTypeId="chartTypeId"
             :svgHeight="svgHeight"
@@ -48,49 +51,42 @@
 </template>
 <script>
 import { mapGetters, mapActions } from 'vuex'
-// import ChartTypes from '@/components/ChartTypes'
-import Isolate from '../components/Isolate'
+import { applyMods } from '@/lib/D3/apply-mods'
+// import { combineMods } from '@/lib/D3/combine-mods'
+
+import ChartTypes from '@/components/ChartTypes'
+import Plot from '@/components/Plot'
 
 export default {
   components: {
-    isolate: Isolate // ,
-    // 'chart-types': ChartTypes
+    'plot-app': Plot,
+    'chart-types-list': ChartTypes
   },
   data: () => ({
-    justify: [
-      'start',
-      'end',
-      'center',
-      'space-between',
-      'space-around'
-    ],
     startHeight: 490,
+
+    // slide group
+    maxWidth: null,
+    pcModsWidth: 0.8,
+    minWidth: 400,
+
     svgHeight: 400,
     svgWidth: 600,
-    chartTypeId: 'date-line-plot'
+    chartTypeId: 'date-line-plot',
+    chartTypeObj: null
   }),
   mounted: function () {
-    // create the charts with the default chart type
-    // id in this case is modId
-    const config = JSON.parse(
-      JSON.stringify(this.getDefaultConfig))
-    for (const modId in this.getMods) {
-      const modObj = JSON.parse(
-        JSON.stringify(this.getMod({ id: modId })))
-      modObj.colors = modObj.colors !== undefined ? modObj.colors : {}
-      const mconfig = this.combineMods(config, modObj.mods, modObj.colors)
-      this.setConfig({ id: modId, ...mconfig })
-      this.setConfig({ ...mconfig, id: modId })
-      this.setChart(
-        {
-          id: modId,
-          config: mconfig,
-          height: this.svgHeight,
-          width: this.svgWidth,
-          chartTypeId: this.chartTypeId
-        }
-      )
-      this.setRefreshChart({ id: modId, value: true })
+    this.refreshCharts()
+  },
+  watch: {
+    getMaxWidth: function (newData) {
+      this.maxWidth = newData
+    },
+    getCurrentChartType: function (newData) {
+      if (newData !== undefined) {
+        this.chartTypeId = newData
+        this.refreshCharts()
+      }
     }
   },
   computed: {
@@ -98,10 +94,8 @@ export default {
       // for combining with mod to make new config
       getDefaultConfig: 'chart/getDefaultConfig',
 
-      // get given config
-      getConfig: 'chart/getConfig',
-
       // get current chart settings associated with chartId
+      getChartType: 'chart/getChartType',
       getChart: 'chart/getChart',
 
       // get mods currently stored
@@ -110,64 +104,67 @@ export default {
       // get particular mod
       getMod: 'chart/getMod',
 
+      getCurrentChartType: 'chart/getCurrentChartType',
       getData: 'sample/getData'
     }),
     getModIds () {
       // NOTE: this is a dupe
       return Object.keys(this.getMods)
+    },
+    getMaxWidth () {
+      if (window.innerWidth !== undefined) {
+        return window.innerWidth * this.pcModsWidth
+      } else {
+        return this.minWidth
+      }
     }
   },
   methods: {
     ...mapActions({
-      setConfig: 'chart/setConfig',
       setChart: 'chart/setChart',
+      setCurrentChartType: 'chart/setCurrentChartType',
       setRefreshChart: 'chart/setRefreshChart',
       createTimeseries: 'sample/createTimeseries'
     }),
-    combineMods (config, mods, colors) {
-      // NOTE: THIS IS ALSO A DUPE, FIND A COMMON HOME
-      var params = JSON.parse(JSON.stringify(config))
-      colors = JSON.parse(JSON.stringify(colors))
-
-      mods.forEach((mod) => {
-        if (mod.path !== undefined) {
-          const branch = mod.path.split('.').slice(0, -1)
-          const leaf = mod.path.split('.').slice(-1)
-          var part = params
-          for (var i = 0; i < branch.length; i++) {
-            part = part[branch[i]]
-          }
-          part[leaf] = mod.value.toString().startsWith('{')
-            ? colors[mod.value.slice(1, -1)]
-            : mod.value
-        }
-      })
-      return params
-    },
-    getSampleData (modId, chartTypeId) {
+    getSampleData (modId) {
       /* getSampleData
-       * NOTE: DUPE WARNING, COPY IN Scaling: decide permanent home
-       * select the data appropriate for both the mod and chart type.
-       * stored in sample/data by key
-       * Options:
-       *   mod has no sampleData option
-       *     use the default key for the chart type
-       *   mod has a specific key for the chart type
-       *     ex. sampleData: { 'date-line-plot': 'ts3' }
-       *     use getData with that key
+       * NOTE: DUPE WARNING, not totally similar, but close
        */
-      let modObj = this.getMod({ id: modId })
-      const dfltData = this.getData({ key: this.chartTypeId })
+      const chartTypeId = this.chartTypeId
+      if (chartTypeId !== undefined) {
+        const modObj = JSON.parse(
+          JSON.stringify(
+            this.getMod({ id: modId })
+          )
+        )
 
-      if (modObj !== undefined && modObj !== null) {
-        modObj = JSON.parse(JSON.stringify(modObj))
-        if (modObj.sampleData[this.chartTypeId] !== undefined) {
-          const dataKey = modObj.sampleData[this.chartTypeId]
-          return JSON.parse(JSON.stringify(this.getData({ key: dataKey })))
+        if (modObj.sampleData[chartTypeId] !== undefined) {
+          // sample data associated with the intended mod type use
+          const dataKey = modObj.sampleData[chartTypeId]
+          return JSON.parse(
+            JSON.stringify(
+              this.getData({ key: dataKey })
+            )
+          )
         } else {
-          // go with default
-          return dfltData
+          return this.getData({ key: chartTypeId })
         }
+      }
+    },
+    refreshCharts () {
+      // charts show a range of mods all same chart, so chartId is modId
+      for (const modId in this.getMods) {
+        applyMods(
+          {
+            vm: this,
+            modId: modId,
+            chartId: modId,
+            chartTypeId: this.chartTypeId,
+            width: this.svgWidth,
+            height: this.svgHeight
+          }
+        )
+        this.setRefreshChart({ id: modId, value: true })
       }
     }
   }
